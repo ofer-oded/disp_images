@@ -6,7 +6,7 @@ import ReactDOM from 'react-dom'
 const App = () => {
     return(
     <div> 
-        <img src="20150904_050647.jpg" alt = "not found" style = {{width:"500px" ,height:"600 px"}}></img>
+        <img src="http://127.0.0.1:8000/download/IMG_8926.JPG/" alt = "not found" style = {{width:"500px" ,height:"600 px"}}></img>
         <div>
         <button>next image</button>
         </div>
