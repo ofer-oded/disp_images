@@ -1,19 +1,13 @@
 import React from 'react'
 import ImageCom from './imageCom'
-
-// using inline styling
-// the value must be a javascript object
-
-const onClickNext = () => {
-    console.log('clicked')
-}
+import DisplayControl from './displayControl'
 
 const App = () => {
     return(
     <div> 
         <ImageCom></ImageCom>
         <div>
-        <button onClick = {onClickNext}>next image</button>
+        <DisplayControl> </DisplayControl>
         </div>
     </div>
     );
