@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'django.contrib.admin',
+    'corsheaders',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -43,6 +44,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -52,6 +54,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'disp_images_site.urls'
+CORS_ORIGIN_ALLOW_ALL = True
 
 TEMPLATES = [
     {
@@ -122,4 +125,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 MEDIA_URL =  '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+
+#url
+DEV_URL = 'http://127.0.0.1/'
 
