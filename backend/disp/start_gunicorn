@@ -1,1 +1,1 @@
-gunicorn disp_images_site.wsgi
+gunicorn disp_images_site.wsgigi
