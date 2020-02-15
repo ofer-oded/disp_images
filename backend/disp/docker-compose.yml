@@ -4,3 +4,7 @@ services:
         build: .
         ports:
             - "8000:8000"
+    disp_frontend:
+        build: ../../frontend/
+        ports:
+            - "3001:3000"
