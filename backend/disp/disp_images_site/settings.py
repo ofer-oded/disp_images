@@ -129,3 +129,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 #url
 DEV_URL = 'http://127.0.0.1/'
 
+ALLOWED_HOSTS = ['10.0.0.15', 'localhost', '127.0.0.1']
+

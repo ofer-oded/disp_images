@@ -13,7 +13,7 @@ const RequestData = (requestId) => {
     useEffect(
         () => {
             (async () => {
-                const response = await axios.get('http://127.0.0.1:8000/disp_images/');
+                const response = await axios.get('http://10.0.0.15:8000/disp_images/');
                 setImageUrl(response.data.id);
             }) ();
 
