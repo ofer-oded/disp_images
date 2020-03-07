@@ -10,7 +10,8 @@ responsible for displaying the images
 
 const ImageCom= (imageCount) => {
     const nextImageUrl = RequestData(imageCount); // request next image
-    const fullUrl = `http://10.0.0.15:8000/download/${nextImageUrl}`;
+   // const fullUrl = `http://10.0.0.15:8000/download/${nextImageUrl}`;
+    const fullUrl = `http://127.0.0.1:8000/download/${nextImageUrl}`;
   //  console.log(`http://127.0.0.1:8000/download${nextImageUrl}`);
 
     return(
