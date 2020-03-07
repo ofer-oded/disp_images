@@ -41,7 +41,8 @@ def __read_images_folder() -> None:
     global __current_image_index
     global __list_images
     if  __current_image_index == -1:
-        __list_images = [f for f in  os.listdir(settings.MEDIA_ROOT) if f.endswith('.JPG')]
+        __list_images = [f for f in  os.listdir(settings.MEDIA_ROOT) if f.upper().endswith('.JPG')]
+
     
     if __list_images == []:
         __current_image_index = -1
