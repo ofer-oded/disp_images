@@ -9,13 +9,21 @@ frontend/node_modules
 *.png
 *.JPG
 
+#backend
+disp_images_backend/.venv
+
+#frontend
+disp_images_frontend/node_modules
+disp_images_frontend/package-lock.json
+
+
 # testing
 /coverage
 
 # production
 /.build
 ./backend/env/
-.env
+
 # misc
 .DS_Store
 .env.local

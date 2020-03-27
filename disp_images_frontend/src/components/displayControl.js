@@ -11,7 +11,7 @@ const DisplayControl = (props) => {
             <button onClick = {props.onClick}>next image</button>
         </div>,
         <div>
-        <ReactInterval timeout={5000} enabled={true}
+        <ReactInterval timeout={2000} enabled={true}
           callback={props.onClick} />
       </div>
     );

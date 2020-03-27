@@ -1,5 +1,6 @@
 import axios from 'axios';
 import {useState,useEffect} from 'react'
+import base_url from '../configs/base_url'
 
 /*
 responsible for requesting data from server
@@ -13,8 +14,7 @@ const RequestData = (requestId) => {
     useEffect(
         () => {
             (async () => {
-                const response = await axios.get('http://10.0.0.15:8000/disp_images/');
-                //const response = await axios.get('http://localhost:8000/disp_images/');
+                const response = await axios.get(`http://${base_url}:8000/disp_images/`);
                 setImageUrl(response.data.id);
             }) ();
 

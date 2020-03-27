@@ -1,4 +1,4 @@
-version: '3.7'
+fir version: '3.7'
 services:
     disp_images_backend:
         image:  "oferoded/disp_images_backend:${TAG}"
