@@ -13,7 +13,6 @@ const App = () => {
         var count = imageCount + 1;
         count =  count === 2 ? 0 : count 
         setImageCount(count);
-        console.log(count);
     }
 
     return(

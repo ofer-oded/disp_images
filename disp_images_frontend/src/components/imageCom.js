@@ -11,7 +11,8 @@ responsible for displaying the images
 
 const ImageCom= (imageCount) => {
     const nextImageUrl = RequestData(imageCount); // request next image
-    const fullUrl = `http://${base_url}:8000/download/${nextImageUrl}`;
+    const fullUrl = `http://${base_url}:8000/media/${nextImageUrl}`;
+    console.log(fullUrl)
 
     return(
         <div> 
