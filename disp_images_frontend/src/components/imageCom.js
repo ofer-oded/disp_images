@@ -1,6 +1,7 @@
 import React from 'react'
 import RequestData from '../resources/makeAjaxRequest';
 import base_url from '../configs/base_url'
+import './imageCom.scss'
 
 /*
 responsible for displaying the images
@@ -12,11 +13,10 @@ responsible for displaying the images
 const ImageCom= (imageCount) => {
     const nextImageUrl = RequestData(imageCount); // request next image
     const fullUrl = `http://${base_url}:8000/media/${nextImageUrl}`;
-    console.log(fullUrl)
-
+       
     return(
         <div> 
-        <img src={fullUrl} alt = "not found" style = {{width:"500px" ,height:"600 px"}}></img>
+        <img src={fullUrl} alt = "not found" ></img>
         </div>
     );
 }
