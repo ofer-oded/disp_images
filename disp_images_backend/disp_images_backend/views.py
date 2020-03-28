@@ -8,7 +8,7 @@ __current_image_index = -1
 
 def index(request):
     return HttpResponse("hello")
-
+'''
 def download(request,path):
     if request.method == 'GET':
         file_path = os.path.join(settings.MEDIA_ROOT, path)
@@ -18,7 +18,7 @@ def download(request,path):
                 response['Content-Disposition'] = 'inline; filename=' + os.path.basename(file_path)
                 return response
         raise Http404
-
+'''
 def getImageURL(request):
     global __current_image_index
     global __list_images

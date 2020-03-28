@@ -23,7 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('index/',views.index, name='index'),
     path('disp_images/',views.getImageURL, name='grap-image-url'),
-    path('download/<path:path>/',views.download)
+#    path('download/<path:path>/',views.download)
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,
