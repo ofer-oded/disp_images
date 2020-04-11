@@ -1,25 +1,52 @@
-import React from 'react';
-import ImageCom from './imageCom';
+import React, { useEffect } from 'react';
+import MainView from './mainView';
 import DisplayControl from './displayControl';
 import {useState} from 'react';
-
+import useResourceToGetURL from '../resources/useResourceToGetURL'
+import useToDownloadImagesInBackground from '../hooks/useToDownloadImagesInBackground'
 
 const App = () => {
     //const [dataRequested,setDataRequestedl] = useState(false);
-    const [imageCount,setImageCount] = useState(0)
+    const [enableDisplayControl,setEnableDisplayControl] = useState(true);
+    const [requestNextURL,setRequestNextURL] = useState(true);
+    const nextURL = useResourceToGetURL(requestNextURL);
+    const downLoadedImageSrc = useToDownloadImagesInBackground(nextURL);
+
+    
     const handleDisplayControlClick = () =>
     {
-      //  setDataRequestedl(true);
-        var count = imageCount + 1;
-        count =  count === 2 ? 0 : count 
-        setImageCount(count);
+        console.log('request next URL');
+        setRequestNextURL(true);
     }
+
+    useEffect(() => {
+        setEnableDisplayControl(downLoadedImageSrc !== undefined &&
+            downLoadedImageSrc !== '' &&
+            downLoadedImageSrc !== null
+            )
+
+    },[downLoadedImageSrc])
+
+    /*
+    useEffect( () => {
+
+    },[enableDisplayControl]
+
+    )*/
+
+  
+    /*
+    const handleEventImageLoaded = () => {
+        console.log('image loaded')
+        setEnableDisplayControl(true)
+    }*/
+
 
     return(
     <div> 
-        <ImageCom dataRequested = {imageCount}></ImageCom>
+        <MainView downloadedImage_source = {downLoadedImageSrc} ></MainView>
         <div>
-        <DisplayControl onClick = {handleDisplayControlClick}> </DisplayControl>
+        <DisplayControl enableRequests={enableDisplayControl} onClick = {handleDisplayControlClick}> </DisplayControl>
         </div>
     </div>
     );

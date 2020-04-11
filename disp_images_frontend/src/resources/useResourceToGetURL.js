@@ -8,23 +8,22 @@ responsible for requesting data from server
 
 
 
-const RequestData = (requestId) => {
+const useResourceToGetURL = (requestToGetNextURL) => {
     const [imageUrl,setImageUrl] = useState('');
-
+  
     useEffect(
         () => {
-            (async () => {
+             (async () => {
                 const response = await axios.get(`http://${base_url}:8000/disp_images/`);
                 setImageUrl(response.data.id);
             }) ();
 
-        },[requestId]
+        },[requestToGetNextURL]
     );
- 
     return imageUrl;
 }
 
 
 
 
-export default RequestData;
+export default useResourceToGetURL;

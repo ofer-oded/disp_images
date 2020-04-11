@@ -1,2 +1,3 @@
-- 1. Rearrang folder structure like: https://www.techiediaries.com/django-rest-image-file-upload-tutorial/
-- 2. Add option to serve images at debug like: https://stackoverflow.com/questions/36392510/django-download-a-file or likethe upper link
+- 1.Add buffer at frontend
+- 2.Full screen button
+- 3.Script to copy images from remote 
