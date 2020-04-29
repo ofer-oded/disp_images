@@ -14,10 +14,14 @@ const useResourceToGetURL = (requestToGetNextURL) => {
     useEffect(
         () => {
              (async () => {
-                const response = await axios.get(`http://${base_url}:8000/disp_images/`);
-                setImageUrl(response.data.id);
+                 if(requestToGetNextURL){
+                    const response = await axios.get(`http://${base_url}:8000/disp_images/`);
+                    setImageUrl(response.data.id);
+                 }
+                 else{
+                     setImageUrl('');
+                 }
             }) ();
-
         },[requestToGetNextURL]
     );
     return imageUrl;

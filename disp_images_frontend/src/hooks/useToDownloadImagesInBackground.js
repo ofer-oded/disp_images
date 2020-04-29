@@ -2,23 +2,25 @@ import { useEffect, useState } from "react"
 import base_url from '../configs/base_url'
 
 
-const useToDownloadImagesInBackground = imageURL => {
-    const [downLoadedImageSrc,setImageDownloaded] = useState('');
-    const fullUrl = `http://${base_url}:8000/media/${imageURL}`;
+const useToDownloadImagesInBackground = requestedRelativeURL => {
+    const [backgroundImage,setBackgroundImageWasDownloaded] = useState({'downloaded':false,'url':''});
+    const requestedFullURL = `http://${base_url}:8000/media/${requestedRelativeURL}`;
     
     var downloadingImage = new Image();
     useEffect(() => {
-         downloadingImage.onload = () =>{
-            console.log(`downloaded ${fullUrl}`);
-            setImageDownloaded(downloadingImage.src);
-    }
-    console.log(`downloading ${fullUrl}`)
-    downloadingImage.src = fullUrl;
+            downloadingImage.onload = () =>{
+                setBackgroundImageWasDownloaded({'downloaded':true,'url':requestedFullURL});
+        };
+        if(requestedRelativeURL !== ''){
+          downloadingImage.src = requestedFullURL; // triggers the download
+        }
+        else {
+            setBackgroundImageWasDownloaded({'downloaded':false,'url':''});
+        }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[fullUrl])
-
-    return downLoadedImageSrc;
+    },[requestedRelativeURL])
+    return backgroundImage;
 }
 
 export default useToDownloadImagesInBackground;

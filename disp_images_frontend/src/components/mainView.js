@@ -20,12 +20,12 @@ const MainView= (props) => {
     var image = document.images[0];
     
     useEffect(()=>{
-        if(props.downloadedImage_source !== null  && props.downloadedImage_source !== undefined && props.downloadedImage_source !== '') {
-            image.src = props.downloadedImage_source;
+        if(props.downloadedImage !== null  && props.downloadedImage !== undefined && props.downloadedImage !== '') {
+            image.src = props.downloadedImage;
         }
      
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[props.downloadedImage_source])
+    },[props.downloadedImage])
     //var downloadingImage = new Image();
     
     /*
