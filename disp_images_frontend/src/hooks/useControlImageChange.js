@@ -2,15 +2,18 @@ import { useState } from 'react'
 import { useEffect } from "react"
 
 
+/**
+ * This hook triggers a request to get next image URL after a delay and if enabled
+ * @param {*} enableControlImageChange 
+ */
 const useControlImageChange = (enableControlImageChange) => {
     const [requsetNextURL,setRequestNextURL] = useState(false);
     useEffect(
         () => {
         if(enableControlImageChange){
             setTimeout(()=>{
-                console.log('timeout');
                setRequestNextURL(true);
-             },10000)}
+             },5000)}
         else{
            setRequestNextURL(false);
         }

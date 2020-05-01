@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react"
 import base_url from '../configs/base_url'
-
+/**
+ * This hook download an image at background and update state when downloaded
+ * Later the browser will use the cache in order to display it
+ * @param {*} requestedRelativeURL 
+ */
 
 const useToDownloadImagesInBackground = requestedRelativeURL => {
     const [backgroundImage,setBackgroundImageWasDownloaded] = useState({'downloaded':false,'url':''});
