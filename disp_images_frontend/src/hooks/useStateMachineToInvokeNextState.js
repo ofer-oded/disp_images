@@ -37,17 +37,7 @@ useEffect(() => {
         }
     }
     
-
-    if(!nextURLrequested && !gotNextURL && imagesWasDownloaded) {
-        // image was downloaded :enable control to request the next URL 
-        setNextStep({'enableControlImageChange':true,'requestNextURL':false, 'requestTodownladimage':false});
-    }
-
-    if(!nextURLrequested && gotNextURL && !imagesWasDownloaded ){
-        // gotNextURL: request to downloads next image
-        setNextStep({'enableControlImageChange':false,'requestNextURL':false, 'requestTodownladimage':true});
-    }
-
+ 
 },[nextURLrequested, gotNextURL, imagesWasDownloaded, nextStep.enableControlImageChange, nextStep.requestNextURL, nextStep.requestTodownladimage])
 
 

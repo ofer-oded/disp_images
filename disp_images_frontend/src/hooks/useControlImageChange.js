@@ -8,8 +8,9 @@ const useControlImageChange = (enableControlImageChange) => {
         () => {
         if(enableControlImageChange){
             setTimeout(()=>{
+                console.log('timeout');
                setRequestNextURL(true);
-             },5000)}
+             },10000)}
         else{
            setRequestNextURL(false);
         }
