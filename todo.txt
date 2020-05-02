@@ -1,3 +1,2 @@
 - 1.Add buffer at frontend
-- 2.Full screen button
 - 3.Script to copy images from remote 
