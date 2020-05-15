@@ -26,7 +26,7 @@ const App = () => {
     
     // request to download the next image URL
     // minor bug!! the hook should get as a parameter the next state and not nextURL but somehow it works 
-    const backgroundImage = useToDownloadImagesInBackground(nextURL);
+    const backgroundImage = useToDownloadImagesInBackground(nextURL,nextState.requestedTodownloadimage);
     useEffect(()=>{setImageWasDownloaded(backgroundImage.downloaded);},[backgroundImage.url,backgroundImage.downloaded]);
 
     return(
