@@ -7,7 +7,7 @@ import useStateMachineToInvokeNextStep from '../hooks/useStateMachineToInvokeNex
 
 const App = () => {
 
-    // below are the events that the state maching get in order to control the state
+    // below are the events that the state machine get in order to control the state
     // have to use useState hook because this is the only way to do 1 time init for them
     const [nextURLrequested,setNextURLrequested] = useState(false);
     const [gotNextURL,setGotNextURL] = useState(false);
@@ -25,7 +25,6 @@ const App = () => {
     useEffect(()=>{setGotNextURL(nextURL ==='' ? false : true);},[nextURL]);
     
     // request to download the next image URL
-    // minor bug!! the hook should get as a parameter the next state and not nextURL but somehow it works 
     const backgroundImage = useToDownloadImagesInBackground(nextURL,nextState.requestedTodownloadimage);
     useEffect(()=>{setImageWasDownloaded(backgroundImage.downloaded);},[backgroundImage.url,backgroundImage.downloaded]);
 

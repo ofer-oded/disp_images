@@ -29,6 +29,8 @@ def getImageURL(request):
     else:
         #img_url = f'{settings.DEV_URL}{__list_images[__current_image_index]}'
         img_url = f'{__list_images[__current_image_index]}'
+        print(f'{__current_image_index}/{len(__list_images)}')
+        print(img_url)
     
     #img_url = 'http://127.0.0.1/IMG_0082.JPG'
     dic  = {

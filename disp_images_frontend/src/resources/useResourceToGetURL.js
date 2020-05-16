@@ -16,6 +16,7 @@ const useResourceToGetURL = (requestToGetNextURL) => {
              (async () => {
                  if(requestToGetNextURL){
                     const response = await axios.get(`http://${base_url}:8000/disp_images/`);
+                    console.log(response.data.id);
                     setImageUrl(response.data.id);
                  }
                  else{
