@@ -22,6 +22,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('index/',views.index, name='index'),
+    #path('<int:image_index>/disp_images/',views.getImageURL, name='grap-image-url'),
     path('disp_images/',views.getImageURL, name='grap-image-url'),
 #    path('download/<path:path>/',views.download)
 ]

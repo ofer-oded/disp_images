@@ -9,23 +9,30 @@ responsible for requesting data from server
 
 
 const useResourceToGetURL = (requestToGetNextURL) => {
-    const [imageUrl,setImageUrl] = useState('');
+    const [responseId,setImageUrl] = useState({id:'',index:-1});
   
     useEffect(
         () => {
              (async () => {
                  if(requestToGetNextURL){
-                    const response = await axios.get(`http://${base_url}:8000/disp_images/`);
-                    console.log(response.data.id);
-                    setImageUrl(response.data.id);
+                    
+                    const response = await axios.get(`http://${base_url}:8000/disp_images/`,{
+                        params:{
+                            IMAGE_INDEX:responseId.index
+                        }
+                    })
+                   // const response = await axios.get(`http://${base_url}:8000/disp_images/`);
+                        console.log(response.data);
+                        setImageUrl(response.data);
                  }
                  else{
-                     setImageUrl('');
+                    // setImageUrl({id:'',index:-1});
                  }
             }) ();
         },[requestToGetNextURL]
     );
-    return imageUrl;
+    return responseId.id;
+    
 }
 
 
