@@ -30,6 +30,22 @@ def getImageURL(request):
     
     image_index = int(s_image_index)
         
+    if image_index -- -2:
+        if __list_images == []:
+            __list_images = [f for f in  os.listdir(settings.MEDIA_ROOT) if f.upper().endswith('.JPG')]
+            __current_image_index = -1
+        
+        if __list_images == []:
+            return _return_response(request,dic)
+
+        __current_image_index = (__current_image_index + 1) % len(__list_images)
+        img_url = __list_images[__current_image_index]
+        dic['id'] = img_url
+        dic['index']  = image_index
+        return _return_response(request,dic)
+
+            
+
     if image_index == -1:
         __list_images = [f for f in  os.listdir(settings.MEDIA_ROOT) if f.upper().endswith('.JPG')]
     
@@ -85,6 +101,7 @@ def __read_images_folder() -> None:
     global __list_images
     if  __current_image_index == -1:
         __list_images = [f for f in  os.listdir(settings.MEDIA_ROOT) if f.upper().endswith('.JPG')]
+        print(f'number of images is {len(__list_images)}')
     
     if __list_images == []:
         __current_image_index = -1
