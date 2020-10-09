@@ -25,6 +25,8 @@ const MainView= (props) => {
     useEffect(()=>{
         if(props.downloadedImage !== null  && props.downloadedImage !== undefined && props.downloadedImage !== '') {
             image.src = props.downloadedImage;
+           console.log(image.src);
+
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     },[props.downloadedImage])

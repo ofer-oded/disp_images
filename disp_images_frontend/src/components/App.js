@@ -4,6 +4,7 @@ import useResourceToGetURL from '../resources/useResourceToGetURL';
 import useToDownloadImagesInBackground from '../hooks/useToDownloadImagesInBackground';
 import useControlImageChange from '../hooks/useControlImageChange';
 import useStateMachineToInvokeNextStep from '../hooks/useStateMachineToInvokeNextState';
+import {Subject} from 'rxjs';
 
 const App = () => {
 
@@ -22,6 +23,7 @@ const App = () => {
     
     // request to get next image URL according to the current state
     const nextURL = useResourceToGetURL(nextState.nextURLWasRequested);
+    console.log(nextURL);
     useEffect(()=>{setGotNextURL(nextURL ==='' ? false : true);},[nextURL]);
     
     // request to download the next image URL

@@ -15,21 +15,20 @@ const useResourceToGetURL = (requestToGetNextURL) => {
         () => {
              (async () => {
                  if(requestToGetNextURL){
-                    
+                    console.log('next url requested');
                     const response = await axios.get(`http://${base_url}:8000/disp_images/`,{
                         params:{
                             IMAGE_INDEX:responseId.index
                         }
                     })
                    // const response = await axios.get(`http://${base_url}:8000/disp_images/`);
-                        console.log(response.data);
-                        setImageUrl(response.data);
+                   setImageUrl(response.data);
                  }
                  else{
                     // setImageUrl({id:'',index:-1});
                  }
             }) ();
-        },[requestToGetNextURL]
+        },[requestToGetNextURL,responseId.id,responseId.index]
     );
     return responseId.id;
     

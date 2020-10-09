@@ -13,6 +13,8 @@ const useControlImageChange = (enableControlImageChange) => {
         if(enableControlImageChange){
             setTimeout(()=>{
                setRequestNextURL(true);
+               const t = new Date();
+               console.log(t.getSeconds());
              },5000)}
         else{
            setRequestNextURL(false);
