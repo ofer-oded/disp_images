@@ -12,10 +12,6 @@ frontend/node_modules
 #backend
 disp_images_backend/.venv
 
-#frontend
-disp_images_frontend/node_modules
-disp_images_frontend/package-lock.json
-
 
 # testing
 /coverage
