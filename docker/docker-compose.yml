@@ -11,7 +11,7 @@ services:
     disp_images_frontend:
         image:  "oferoded/disp_images_frontend:${TAG}"
         build:
-            context: ../disp_images_frontend/
+            context: ../disp-images-angular-frontend/
         ports:
             - 80:80
         volumes:

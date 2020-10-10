@@ -23,7 +23,7 @@ export class AppComponent {
     const interval$ = interval(2500);
     const imgObjs$ = interval$.pipe(concatMap(_=>this.getNextImageNameService.getNextImageName(this.backendURL)));
     const imgURLs$ = imgObjs$.pipe(map(imgObj => `${this.mediaURL}${imgObj.id}`)).pipe(
-      concatMap(imgURL => this.loadImageService.load(imgURL).pipe(delay(5000)).pipe(mapTo(imgURL)))
+      concatMap(imgURL => this.loadImageService.load(imgURL).pipe(delay(10000)).pipe(mapTo(imgURL)))
     )
     imgURLs$.subscribe(imgURl => this.imgSrc = imgURl);
   }
