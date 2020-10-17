@@ -2,16 +2,12 @@ version: '3.7'
 services:
     disp_images_backend:
         image:  "oferoded/disp_images_backend:${TAG}"
-        build: 
-            context: ../disp_images_backend/
         ports:
             - 8000:8000
         volumes:
             - media:/usr/apps/media
     disp_images_frontend:
         image:  "oferoded/disp_images_frontend:${TAG}"
-        build:
-            context: ../disp-images-angular-frontend/
         ports:
             - 80:80
         volumes:

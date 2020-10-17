@@ -1,15 +1,53 @@
 # copy docker-compose.yml to remote host
 # destination directory should exist
 echo 'copy docker-compose yml and .env to remote host ...'
-rsync ./docker/docker-compose.yml itay@10.0.0.21:/home/itay/docker-compose
 rsync ./docker/.env  itay@10.0.0.21:/home/itay/docker-compose
+if [ $? == 0 ]
+then
+    echo done
+else
+    echo failed
+    exit 1
+fi
+
+echo "copy docker-compose yml to remote host"
+rsync ./docker/docker-compose_no_build.yml itay@10.0.0.21:/home/itay/docker-compose/docker-compose.yml
+if [ $? == 0 ]
+then
+    echo done
+else
+    echo failed
+    exit 1
+fi
+
+echo "copy deploy script to remote host"
 rsync ./deploy_on_remote_host.sh itay@10.0.0.21:/home/itay
-echo 'done'
+if [ $? == 0 ]
+then
+    echo done
+else
+    echo failed
+    exit 1
+fi
 
 # connecting to remote host
-echo 'pulling images at remote host'
+echo 'Running deploy script on remote host remote host'
 ssh itay@10.0.0.21 'chmod a+x deploy_on_remote_host.sh'
+if [ $? == 0 ]
+then
+    echo done
+else
+    echo failed
+    exit 1
+fi
 ssh itay@10.0.0.21 './deploy_on_remote_host.sh'
+if [ $? == 0 ]
+then
+    echo done
+else
+    echo failed
+    exit 1
+fi
 
 
 
