@@ -10,7 +10,7 @@ COPY   . .
 # install from the package lock file
 RUN npm ci
 # build
-RUN npm run build
+RUN npm run prod
 
 ### STAGE 2: Run ###
 # production environment
