@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component , OnInit} from '@angular/core';
 import {interval} from 'rxjs'
 import {map, switchMap, concatMap, mapTo, flatMap, take, delay} from 'rxjs/operators';
 
@@ -14,9 +14,16 @@ import {environment} from "../environments/environment"
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  constructor(private getNextImageNameService:GetNextImageNameService, private loadImageService: LoadImageService){}
+  constructor(private getNextImageNameService:GetNextImageNameService, private loadImageService: LoadImageService){
+  }
   backendURL =`http://${environment.baseUrl}:8000/disp_images/?IMAGE_INDEX=-2`
   mediaURL = `http://${environment.baseUrl}:8000/media/`
+
+  ngOnInit(){
+    console.log("init")
+    this._doGet();
+    }
+
 
   title = 'disp-images-angular-frontend';
   imgSrc: string;
