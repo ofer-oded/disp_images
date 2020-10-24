@@ -4,6 +4,7 @@ import {map, switchMap, concatMap, mapTo, flatMap, take, delay} from 'rxjs/opera
 
 import {GetNextImageNameService} from './get-next-image-name.service'
 import {LoadImageService} from './load-image.service';
+import {environment} from "../environments/environment"
 
 
 
@@ -14,8 +15,8 @@ import {LoadImageService} from './load-image.service';
 })
 export class AppComponent {
   constructor(private getNextImageNameService:GetNextImageNameService, private loadImageService: LoadImageService){}
-  backendURL = "http://10.0.0.21:8000/disp_images/?IMAGE_INDEX=-2"
-  mediaURL = "http://10.0.0.21:8000/media/"
+  backendURL =`http://${environment.baseUrl}:8000/disp_images/?IMAGE_INDEX=-2`
+  mediaURL = `http://${environment.baseUrl}:8000/media/`
 
   title = 'disp-images-angular-frontend';
   imgSrc: string;
