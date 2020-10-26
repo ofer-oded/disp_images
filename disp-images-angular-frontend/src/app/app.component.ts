@@ -16,12 +16,14 @@ import {environment} from "../environments/environment"
 export class AppComponent {
   constructor(private getNextImageNameService:GetNextImageNameService, private loadImageService: LoadImageService){
   }
-  backendURL =`http://${environment.baseUrl}:8000/disp_images/?IMAGE_INDEX=-2`
-  mediaURL = `http://${environment.baseUrl}:8000/media/`
+  backendURL =`http://${environment.baseUrl}:8000/disp_images/?IMAGE_INDEX=-2`;
+  mediaURL = `http://${environment.baseUrl}:8000/media/`;
+  image = undefined; 
 
   ngOnInit(){
     console.log("init")
     this._doGet();
+    this.image = document.images[0];
     }
 
 
@@ -34,5 +36,8 @@ export class AppComponent {
       concatMap(imgURL => this.loadImageService.load(imgURL).pipe(delay(10000)).pipe(mapTo(imgURL)))
     )
     imgURLs$.subscribe(imgURl => this.imgSrc = imgURl);
+  }
+  handleImageClickEvent(){
+    this.image.requestFullscreen();
   }
 }
