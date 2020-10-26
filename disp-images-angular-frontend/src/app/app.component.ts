@@ -38,6 +38,14 @@ export class AppComponent {
     imgURLs$.subscribe(imgURl => this.imgSrc = imgURl);
   }
   handleImageClickEvent(){
-    this.image.requestFullscreen();
+    if(this.image.requestFullscreen){
+      this.image.requestFullscreen();
+  } else if(this.image.mozRequestFullScreen){ // Firefox
+      this.image.mozRequestFullScreen();
+  } else if(this.image.webkitRequestFullscreen){ // Chrome, Safari and Opera 
+      this.image.webkitRequestFullscreen();
+  } else if(this.image.msRequestFullscreen) { // IE/Edge
+      this.image.msRequestFullscreen();
+ }
   }
 }
