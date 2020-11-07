@@ -1,13 +1,17 @@
 import os
 from django.shortcuts import render
-from django.http import HttpResponse, JsonResponse,Http404
+from django.http import HttpResponse, JsonResponse, Http404
 from django.conf import settings
 
 __list_images = []
 __current_image_index = -1
+__gen = None
 
-def index(request):
+
+def index(request)-> HttpResponse:
     return HttpResponse("hello")
+
+
 '''
 def download(request,path):
     if request.method == 'GET':
@@ -19,48 +23,73 @@ def download(request,path):
                 return response
         raise Http404
 '''
+
+
+def load(request)-> HttpResponse:
+    global __gen
+    __gen = _load_images()
+    return HttpResponse("images loaded")
+
+
+def get_next_image_name(request):
+    dic = {'id': '', 'index': -1, 'total': 0}
+    global __gen
+    s_image_index = request.GET['IMAGE_INDEX']
+    if s_image_index == '':
+        return _return_response(request, dic)
+
+    image_index = int(s_image_index)
+    if image_index == 2:
+        print(next(__gen))
+        return _return_response(request, dic)
+
+
+def _load_images() -> GeneratorExit:
+    for f in os.listdir(settings.MEDIA_ROOT):
+        if f.upper().endswith('.JPG'):
+            yield f
+
+
 def getImageURL(request):
     global __current_image_index
     global __list_images
-    dic = {'id': '', 'index':-1}
+    dic = {'id': '', 'index': -1}
 
     s_image_index = request.GET['IMAGE_INDEX']
     if s_image_index == '':
-        return _return_response(request,dic)
-    
+        return _return_response(request, dic)
+
     image_index = int(s_image_index)
-        
-    if image_index -- -2:
+
+    if image_index == -2:
         if __list_images == []:
-            __list_images = [f for f in  os.listdir(settings.MEDIA_ROOT) if f.upper().endswith('.JPG')]
+            __list_images = [f for f in os.listdir(settings.MEDIA_ROOT) if f.upper().endswith('.JPG')]
             __current_image_index = -1
-        
+
         if __list_images == []:
-            return _return_response(request,dic)
+            return _return_response(request, dic)
 
         __current_image_index = (__current_image_index + 1) % len(__list_images)
         img_url = __list_images[__current_image_index]
         dic['id'] = img_url
-        dic['index']  = image_index
-        return _return_response(request,dic)
-
-            
+        dic['index'] = image_index
+        return _return_response(request, dic)
 
     if image_index == -1:
-        __list_images = [f for f in  os.listdir(settings.MEDIA_ROOT) if f.upper().endswith('.JPG')]
-    
-    if __list_images == []:
-        return _return_response(request,dic)
+        __list_images = [f for f in os.listdir(settings.MEDIA_ROOT) if f.upper().endswith('.JPG')]
 
-    image_index = image_index +1
+    if __list_images == []:
+        return _return_response(request, dic)
+
+    image_index = image_index + 1
     if image_index == len(__list_images):
         image_index = 0
 
     img_url = f'{__list_images[image_index]}'
     dic['id'] = img_url
-    dic['index']  = image_index
-    return _return_response(request,dic)
-    
+    dic['index'] = image_index
+    return _return_response(request, dic)
+
     '''
     last_displayed_index = request.GET['IMAGE_INDEX']
     if last_displayed_index != '':
@@ -85,24 +114,25 @@ def getImageURL(request):
         return JsonResponse(dic)
     '''
 
-def _return_response(request,dic):
+
+def _return_response(request, dic):
     if request.method == 'GET':
         return JsonResponse(dic)
     return None
 
 
-def _read_image_folder(image_index:int):
+def _read_image_folder(image_index: int):
     if image_index == -1:
-        __list_images = [f for f in  os.listdir(settings.MEDIA_ROOT) if f.upper().endswith('.JPG')]
-    
+        __list_images = [f for f in os.listdir(settings.MEDIA_ROOT) if f.upper().endswith('.JPG')]
+
 
 def __read_images_folder() -> None:
     global __current_image_index
     global __list_images
-    if  __current_image_index == -1:
-        __list_images = [f for f in  os.listdir(settings.MEDIA_ROOT) if f.upper().endswith('.JPG')]
+    if __current_image_index == -1:
+        __list_images = [f for f in os.listdir(settings.MEDIA_ROOT) if f.upper().endswith('.JPG')]
         print(f'number of images is {len(__list_images)}')
-    
+
     if __list_images == []:
         __current_image_index = -1
         return
@@ -112,10 +142,3 @@ def __read_images_folder() -> None:
         __current_image_index = __current_image_index + 1
     else:
         __current_image_index = 0
-
-    
-        
-    
-
-
-
