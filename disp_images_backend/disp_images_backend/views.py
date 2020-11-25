@@ -1,11 +1,14 @@
 import os
 from django.shortcuts import render
+from typing import Generator
 from django.http import HttpResponse, JsonResponse, Http404
 from django.conf import settings
 
 __list_images = []
 __current_image_index = -1
-__gen = None
+__gen = None  # type: Generator
+__number_of_images = 0
+
 
 
 def index(request)-> HttpResponse:
@@ -25,29 +28,54 @@ def download(request,path):
 '''
 
 
-def load(request)-> HttpResponse:
-    global __gen
-    __gen = _load_images()
-    return HttpResponse("images loaded")
-
 
 def get_next_image_name(request):
-    dic = {'id': '', 'index': -1, 'total': 0}
+    dic = {'image_name': '', 'image_index': -1, 'total_number_of_images': 0}
     global __gen
-    s_image_index = request.GET['IMAGE_INDEX']
-    if s_image_index == '':
+    global __number_of_images
+
+    command_from_frontend = request.GET['command']
+
+    if command_from_frontend == 'RESTART':
+        __gen = None
         return _return_response(request, dic)
+    elif command_from_frontend == 'GET_NEXT_IMAGE_NAME':
+        if not __gen:
+            __number_of_images = _get_number_of_images()
+            if __number_of_images <= 0:
+                print("no images were found")
+                return _return_response(request, dic)
+            __gen = _load_images()
+        try:
+            return _return_response(request,_fill_resonse(next(__gen)))
+        except StopIteration:
+            __gen = _load_images()
+        return _return_response(request,_fill_resonse(next(__gen)))
+    else:
+        print('got unknown command')
+        return _return_response(request,dic)
 
-    image_index = int(s_image_index)
-    if image_index == 2:
-        print(next(__gen))
-        return _return_response(request, dic)
-
-
-def _load_images() -> GeneratorExit:
+def _load_images() -> Generator[dict,None,None]:
+    dic = {"index":0,"image_name":""}
+    i = -1
     for f in os.listdir(settings.MEDIA_ROOT):
         if f.upper().endswith('.JPG'):
-            yield f
+            i = i + 1
+            dic["index"]= i
+            dic["image_name"] = f
+            yield dic
+
+
+def _get_number_of_images() -> int:
+    i = 0
+    for f in os.listdir(settings.MEDIA_ROOT):
+        if f.upper().endswith('.JPG'):
+            i = i +1
+    return i
+
+def _fill_resonse(image_details:dict) -> dict:
+    global __number_of_images
+    return {'image_name':image_details['image_name'],'image_index':image_details['index'],'total_number_of_images':__number_of_images}
 
 
 def getImageURL(request):

@@ -6,13 +6,39 @@ class TestCalls(TestCase):
         self.assertEqual(response.content,b'hello')
 
     def test_get_image_name(self):
-        response = self.client.get('/load/')
-        self.assertEqual(response.status_code,200)
-        response = self.client.get('/disp_images/',{'IMAGE_INDEX':2})
+        response = self.client.get('/disp_images/',{'command':'GET_NEXT_IMAGE_NAME'})
         self.assertEqual(response.status_code, 200)
-        response = self.client.get('/disp_images/',{'IMAGE_INDEX':2})
+        self.assertEqual(eval(response.content)['image_index'],0)
+        self.assertEqual(eval(response.content)['total_number_of_images'],3)
+
+        response = self.client.get('/disp_images/',{'command':'GET_NEXT_IMAGE_NAME'})
         self.assertEqual(response.status_code, 200)
-        response = self.client.get('/disp_images/',{'IMAGE_INDEX':2})
+        self.assertEqual(eval(response.content)['image_index'],1)
+        self.assertEqual(eval(response.content)['total_number_of_images'],3)
+
+        response = self.client.get('/disp_images/',{'command':'GET_NEXT_IMAGE_NAME'})
         self.assertEqual(response.status_code, 200)
-        response = self.client.get('/disp_images/',{'IMAGE_INDEX':2})
+        self.assertEqual(eval(response.content)['image_index'],2)
+        self.assertEqual(eval(response.content)['total_number_of_images'],3)
+
+        response = self.client.get('/disp_images/',{'command':'GET_NEXT_IMAGE_NAME'})
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(eval(response.content)['image_index'],0)
+        self.assertEqual(eval(response.content)['total_number_of_images'],3)
+
+        response = self.client.get('/disp_images/',{'command':'GET_NEXT_IMAGE_NAME'})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(eval(response.content)['image_index'],1)
+        self.assertEqual(eval(response.content)['total_number_of_images'],3)
+
+        response = self.client.get('/disp_images/',{'command':'RESTART'})
+        self.assertEqual(response.status_code, 200)
+
+        response = self.client.get('/disp_images/',{'command':'GET_NEXT_IMAGE_NAME'})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(eval(response.content)['image_index'],0)
+        self.assertEqual(eval(response.content)['total_number_of_images'],3)
+
+        response = self.client.get('/disp_images/',{'command':'NOT_SUPPORTED_COMMAND'})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(eval(response.content)['image_index'],-1)
