@@ -1,5 +1,5 @@
 import { Component , OnInit} from '@angular/core';
-import {interval} from 'rxjs'
+import {EMPTY, interval, Observable, Subject} from 'rxjs'
 import {map, switchMap, concatMap, mapTo, flatMap, take, delay} from 'rxjs/operators';
 
 import {GetNextImageNameService} from './get-next-image-name.service'
@@ -19,6 +19,8 @@ export class AppComponent {
   backendURL =`http://${environment.baseUrl}:8000/disp_images/?command=GET_NEXT_IMAGE_NAME`;
   mediaURL = `http://${environment.baseUrl}:8000/media/`;
   image = undefined; 
+  imgURLs$ = new Observable<string>();
+  value = false;
 
   ngOnInit(){
     console.log("init")
@@ -30,12 +32,20 @@ export class AppComponent {
   title = 'disp-images-angular-frontend';
   imgSrc: string;
   _doGet(){
+    // https://codeburst.io/heres-how-i-built-my-very-own-pausable-rxjs-operator-24550123e7a6
+    // https://thinkrx.io/gist/dffd23fb4fe78cdbf539a6f0913742f4/
+    const pause$ = new Observable();
     const interval$ = interval(2500);
-    const imgObjs$ = interval$.pipe(concatMap(_=>this.getNextImageNameService.getNextImageName(this.backendURL)));
-    const imgURLs$ = imgObjs$.pipe(map(imgObj => `${this.mediaURL}${imgObj.image_name}`)).pipe(
+    const newSource$ =  pause$.pipe(switchMap(_ => false ? interval$ : interval$)); 
+    const imgObjs$ = newSource$.pipe(concatMap(_=>this.getNextImageNameService.getNextImageName(this.backendURL)));
+    this.imgURLs$ = imgObjs$.pipe(map(imgObj => `${this.mediaURL}${imgObj.image_name}`)).pipe(
       concatMap(imgURL => this.loadImageService.load(imgURL).pipe(delay(10000)).pipe(mapTo(imgURL)))
     )
-    imgURLs$.subscribe(imgURl => this.imgSrc = imgURl);
+    // const pause$ = new Subject();
+    // const value = false;
+    // pause$.pipe(switchMap(value => value ? EMPTY : imgURLs$));
+    this.imgURLs$.subscribe(imgURL => this.imgSrc = imgURL);
+
   }
   handleImageClickEvent(){
     if(this.image.requestFullscreen){
