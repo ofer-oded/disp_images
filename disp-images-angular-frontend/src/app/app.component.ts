@@ -1,5 +1,5 @@
 import { Component , OnInit} from '@angular/core';
-import {EMPTY, interval, Observable, Subject} from 'rxjs'
+import {EMPTY, interval, Observable, Subject, of} from 'rxjs'
 import {map, switchMap, concatMap, mapTo, flatMap, take, delay} from 'rxjs/operators';
 
 import {GetNextImageNameService} from './get-next-image-name.service'
@@ -34,9 +34,11 @@ export class AppComponent {
   _doGet(){
     // https://codeburst.io/heres-how-i-built-my-very-own-pausable-rxjs-operator-24550123e7a6
     // https://thinkrx.io/gist/dffd23fb4fe78cdbf539a6f0913742f4/
-    const pause$ = new Observable();
+    const pause$ = of(false);
     const interval$ = interval(2500);
-    const newSource$ =  pause$.pipe(switchMap(_ => false ? interval$ : interval$)); 
+    // interval$.subscribe(v => console.log(v));
+    const newSource$ =  pause$.pipe(switchMap(value => value ? EMPTY : interval$)); 
+    newSource$.subscribe(v => console.log(v));
     const imgObjs$ = newSource$.pipe(concatMap(_=>this.getNextImageNameService.getNextImageName(this.backendURL)));
     this.imgURLs$ = imgObjs$.pipe(map(imgObj => `${this.mediaURL}${imgObj.image_name}`)).pipe(
       concatMap(imgURL => this.loadImageService.load(imgURL).pipe(delay(10000)).pipe(mapTo(imgURL)))
