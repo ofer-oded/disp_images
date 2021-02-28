@@ -19,7 +19,6 @@ export class AppComponent {
   backendURL =`http://${environment.baseUrl}:8000/disp_images/?command=GET_NEXT_IMAGE_NAME`;
   mediaURL = `http://${environment.baseUrl}:8000/media/`;
   image = undefined; 
-  imgURLs$ = new Observable<string>();
   value = false;
 
   ngOnInit(){
@@ -40,13 +39,13 @@ export class AppComponent {
     const newSource$ =  pause$.pipe(switchMap(value => value ? EMPTY : interval$)); 
     newSource$.subscribe(v => console.log(v));
     const imgObjs$ = newSource$.pipe(concatMap(_=>this.getNextImageNameService.getNextImageName(this.backendURL)));
-    this.imgURLs$ = imgObjs$.pipe(map(imgObj => `${this.mediaURL}${imgObj.image_name}`)).pipe(
+    const imgURLs$ = imgObjs$.pipe(map(imgObj => `${this.mediaURL}${imgObj.image_name}`)).pipe(
       concatMap(imgURL => this.loadImageService.load(imgURL).pipe(delay(10000)).pipe(mapTo(imgURL)))
     )
     // const pause$ = new Subject();
     // const value = false;
     // pause$.pipe(switchMap(value => value ? EMPTY : imgURLs$));
-    this.imgURLs$.subscribe(imgURL => this.imgSrc = imgURL);
+    imgURLs$.subscribe(imgURL => this.imgSrc = imgURL);
 
   }
   handleImageClickEvent(){
