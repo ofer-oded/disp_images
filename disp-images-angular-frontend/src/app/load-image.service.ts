@@ -15,8 +15,8 @@ export class LoadImageService {
 
    load(imgSrc) {
     const img = new Image();
+    console.log(`loading ${imgSrc}`);
     img.src = imgSrc;
-
     return fromEvent(img, 'load').pipe(take(1))
   }
 
