@@ -1,11 +1,10 @@
-import { Component , OnInit} from '@angular/core';
-import {EMPTY, interval, Observable, Subject, of} from 'rxjs'
-import {map, switchMap, concatMap, mapTo, flatMap, take, delay} from 'rxjs/operators';
+import { Component } from '@angular/core';
+import { of, EMPTY, interval } from 'rxjs';
+import { concatMap, map, mapTo, switchMap } from 'rxjs/operators';
+import { environment } from "../environments/environment";
+import { GetNextImageNameService } from './get-next-image-name.service';
+import { LoadImageService } from './load-image.service';
 
-import {GetNextImageNameService} from './get-next-image-name.service'
-import {LoadImageService} from './load-image.service';
-import {environment} from "../environments/environment"
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 
 
@@ -17,14 +16,13 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 export class AppComponent {
   private backendURL: string = `http://${environment.baseUrl}:8000/disp_images/?command=GET_NEXT_IMAGE_NAME`;
   private mediaURL: string = `http://${environment.baseUrl}:8000/media/`;
-  private image: any = undefined;
+  private image: HTMLImageElement = undefined;
   private pause: boolean = false; 
   
   constructor(private getNextImageNameService:GetNextImageNameService, private loadImageService: LoadImageService){
   }
   
   ngOnInit(){
-    console.log("init")
     this._doGet();
     this.image = document.images[0];
   }
@@ -37,7 +35,7 @@ export class AppComponent {
     const imgObjs$ = interval$.pipe(concatMap(_ => this.getNextImageNameService.getNextImageName(this.backendURL,this.pause)));
     const imgURLs$ = imgObjs$.pipe(
       map((imgObj) => {
-      return `${this.mediaURL}${imgObj.image_name}`;
+        return `${this.mediaURL}${imgObj.image_name}`;
     })).pipe(
       concatMap(imgURL => this.loadImageService.load(imgURL).pipe(mapTo(imgURL)))
       )
@@ -46,13 +44,13 @@ export class AppComponent {
     handleImageDblClickEvent(){
       if(this.image.requestFullscreen){
         this.image.requestFullscreen();
-      } else if(this.image.mozRequestFullScreen){ // Firefox
+      }/* else if(this.image.mozRequestFullScreen){ // Firefox
         this.image.mozRequestFullScreen();
       } else if(this.image.webkitRequestFullscreen){ // Chrome, Safari and Opera 
         this.image.webkitRequestFullscreen();
       } else if(this.image.msRequestFullscreen) { // IE/Edge
         this.image.msRequestFullscreen();
-      }
+      }*/
     }
     
     handleImageClickEvent(){

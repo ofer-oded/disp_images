@@ -1,22 +1,20 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { EMPTY, Observable } from 'rxjs';
-import { FormControl } from '@angular/forms';
-
+import {ImageObject} from '../../src/backend-interface'
+// import { FormControl } from '@angular/forms';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class GetNextImageNameService {
-
-  constructor(private httpClient:HttpClient) {
-    console.log("GetNextImageNameService constructor")
-   }
-   getNextImageName(url:string, pause:boolean):Observable<any>{
-     if(!pause){
-       return this.httpClient.get(url);
-      }
-      return EMPTY;
-   }
-
+  constructor(private httpClient: HttpClient) {
+    console.log('GetNextImageNameService constructor');
+  }
+  getNextImageName(url: string, pause: boolean) {
+    if (!pause) {
+      return this.httpClient.get<ImageObject>(url);
+    }
+    return EMPTY;
+  }
 }
