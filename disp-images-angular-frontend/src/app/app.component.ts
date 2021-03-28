@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
-import { of, EMPTY, interval } from 'rxjs';
+import { interval, Observable } from 'rxjs';
 import { concatMap, map, mapTo, switchMap } from 'rxjs/operators';
 import { environment } from "../environments/environment";
 import { GetNextImageNameService } from './get-next-image-name.service';
 import { LoadImageService } from './load-image.service';
-
-
+import {ImageObject} from '../../src/backend-interface'
 
 
 @Component({
@@ -32,8 +31,8 @@ export class AppComponent {
   imgSrc: string;
   _doGet(){
     const interval$ = interval(5000);
-    const imgObjs$ = interval$.pipe(concatMap(_ => this.getNextImageNameService.getNextImageName(this.backendURL,this.pause)));
-    const imgURLs$ = imgObjs$.pipe(
+    const imgObjs$:Observable<ImageObject> = interval$.pipe(concatMap(_ => this.getNextImageNameService.getNextImageName(this.backendURL,this.pause)));
+    const imgURLs$:Observable<string> = imgObjs$.pipe(
       map((imgObj) => {
         return `${this.mediaURL}${imgObj.image_name}`;
     })).pipe(
@@ -56,6 +55,10 @@ export class AppComponent {
     handleImageClickEvent(){
       this.pause = !this.pause;
       console.log("pause");
+    }
+
+    public hide() : boolean{
+      return !this.pause;
     }
 
     

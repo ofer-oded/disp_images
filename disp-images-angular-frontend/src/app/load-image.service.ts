@@ -7,7 +7,6 @@ import { take } from 'rxjs/internal/operators/take';
 })
 export class LoadImageService {
   constructor() {
-    console.log('LoadImageService constructor');
   }
 
   load(imgSrc: string) {
