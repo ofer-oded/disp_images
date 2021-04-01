@@ -40,7 +40,9 @@ export class AppComponent {
       )
       imgURLs$.subscribe(imgURL => this.imgSrc = imgURL);
     }
-    handleImageDblClickEvent(){
+    
+    fullScreen(){
+      console.log("full screen");
       if(this.image.requestFullscreen){
         this.image.requestFullscreen();
       }/* else if(this.image.mozRequestFullScreen){ // Firefox
@@ -52,15 +54,21 @@ export class AppComponent {
       }*/
     }
     
-    handleImageClickEvent(){
+    handleImageClickEvent(event: MouseEvent){
+      if(event.shiftKey){
+        this.fullScreen();
+        return;
+      }
       this.pause = !this.pause;
-      console.log("pause");
+      if(document.fullscreenElement){
+      document.exitFullscreen();
+      }
+
     }
 
-    public hide() : boolean{
+    public hide_pause_indicator() : boolean{
       return !this.pause;
     }
 
-    
   }
   

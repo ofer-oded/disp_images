@@ -1,4 +1,4 @@
 <div>
-  <app-pause-indicator class="pause" [hidden]="hide()"></app-pause-indicator>
-  <img alt="loading" [src]="imgSrc" (click)="handleImageClickEvent()"  (dblclick)="handleImageDblClickEvent()">
+  <app-pause-indicator class="pause" [hidden]="hide_pause_indicator()"></app-pause-indicator>
+  <img alt="loading" [src]="imgSrc" (click)="handleImageClickEvent($event)">
 </div>
