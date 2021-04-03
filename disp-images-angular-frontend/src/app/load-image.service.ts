@@ -12,7 +12,7 @@ export class LoadImageService {
   load(imgURL: string) {
     const img = new Image();
     img.src = imgURL;
-    // return an Observable of load even when the image was loaded
+    // return an Observable of load event when the image was loaded
     return fromEvent(img, 'load').pipe(take(1));
   }
 }

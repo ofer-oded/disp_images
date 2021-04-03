@@ -1,4 +1,5 @@
 <div>
+  <app-counter class="counter" [count] = "image_count"></app-counter>
   <app-pause-indicator class="pause" [hidden]="hide_pause_indicator()"></app-pause-indicator>
   <img alt="loading" [src]="imgSrc" (click)="handleImageClickEvent($event)">
 </div>

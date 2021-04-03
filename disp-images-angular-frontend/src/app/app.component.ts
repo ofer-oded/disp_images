@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { interval, Observable } from 'rxjs';
-import { concatMap, map, mapTo, switchMap } from 'rxjs/operators';
+import { concatMap, map} from 'rxjs/operators';
 import { environment } from '../environments/environment';
 import { GetNextImageNameService } from './get-next-image-name.service';
 import { LoadImageService } from './load-image.service';
@@ -16,6 +16,7 @@ export class AppComponent {
   private mediaURL: string = `http://${environment.baseUrl}:8000/media/`;
   private image: HTMLImageElement = undefined;
   private pause: boolean = false;
+  public image_count: string = "1/1";
 
   constructor(
     private getNextImageNameService: GetNextImageNameService,
@@ -60,11 +61,7 @@ export class AppComponent {
     // this.imgSrc is input binding to the html img tag
     imageObjectsFullURL$.subscribe((imageObjectsFullURL: ImageObject) => {
       this.imgSrc = imageObjectsFullURL.image_name;
-      console.log(
-        `${imageObjectsFullURL.image_index + 1}/${
-          imageObjectsFullURL.total_number_of_images
-        }`
-      );
+      this.image_count = this.createImageCountString(imageObjectsFullURL.image_index,imageObjectsFullURL.total_number_of_images);
     });
 
   }
@@ -91,6 +88,10 @@ export class AppComponent {
     if (document.fullscreenElement) {
       document.exitFullscreen();
     }
+  }
+
+  private createImageCountString(image_index: number, total_images: number): string{
+    return `${image_index+1}/${total_images}`
   }
 
   public hide_pause_indicator(): boolean {
