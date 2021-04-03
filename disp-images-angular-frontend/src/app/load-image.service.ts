@@ -9,9 +9,10 @@ export class LoadImageService {
   constructor() {
   }
 
-  load(imgSrc: string) {
+  load(imgURL: string) {
     const img = new Image();
-    img.src = imgSrc;
+    img.src = imgURL;
+    // return an Observable of load even when the image was loaded
     return fromEvent(img, 'load').pipe(take(1));
   }
 }
