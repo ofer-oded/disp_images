@@ -5,12 +5,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
 import { PauseIndicatorComponent } from './pause-indicator/pause-indicator.component';
+import { CounterComponent } from './counter/counter.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    PauseIndicatorComponent
+    PauseIndicatorComponent,
+    CounterComponent
   ],
   imports: [
     BrowserModule,
