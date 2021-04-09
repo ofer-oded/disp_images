@@ -1,4 +1,6 @@
 import os
+import glob
+from pathlib import Path
 from django.shortcuts import render
 from typing import Generator
 from django.http import HttpResponse, JsonResponse, Http404
@@ -58,19 +60,26 @@ def get_next_image_name(request):
 def _load_images() -> Generator[dict,None,None]:
     dic = {"index":0,"image_name":""}
     i = -1
-    for f in os.listdir(settings.MEDIA_ROOT):
+    media_folder_path = os.path.join(os.getcwd(), settings.MEDIA_ROOT)
+    for f in glob.iglob(media_folder_path + '**/**', recursive=True):
         if f.upper().endswith('.JPG'):
-            i = i + 1
-            dic["index"]= i
-            dic["image_name"] = f
+            i += 1
+            dic["index"] = i
+            dic["image_name"] = _extract_image_name_and_its_folder_name(f)
+            # os.chdir(current_folder)
             yield dic
+
+def _extract_image_name_and_its_folder_name(full_image_name:str) -> str:
+    path = Path(full_image_name)
+    return os.path.join(path.parts[-2], path.parts[-1])
 
 
 def _get_number_of_images() -> int:
     i = 0
-    for f in os.listdir(settings.MEDIA_ROOT):
+    media_folder_path = os.path.join(os.getcwd(), settings.MEDIA_ROOT)
+    for f in glob.iglob(media_folder_path + '**/**', recursive=True):
         if f.upper().endswith('.JPG'):
-            i = i +1
+            i += 1
     return i
 
 def _fill_resonse(image_details:dict) -> dict:
