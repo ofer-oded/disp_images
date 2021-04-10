@@ -63,9 +63,7 @@ export class AppComponent {
     imageObjectsFullURL$.subscribe((imageObjectsFullURL: ImageObject) => {
       this.imgSrc = imageObjectsFullURL.image_name;
       this.image_count = this.createImageCountString(imageObjectsFullURL.image_index,imageObjectsFullURL.total_number_of_images);
-      this.year_event = `${imageObjectsFullURL.year}__${imageObjectsFullURL.event}` 
-      console.log(imageObjectsFullURL.year);
-      console.log(imageObjectsFullURL.event);
+      this.year_event = `${imageObjectsFullURL.year} ${imageObjectsFullURL.event}` 
     });
 
   }

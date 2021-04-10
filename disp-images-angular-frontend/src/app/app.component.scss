@@ -8,20 +8,26 @@
   position: absolute;
   font-size: 30px;
   top: 1%;
-  left: 1%;
+  left: 50%;
   background: rgb(0, 0, 0); /* Fallback color */
   background: rgba(0, 0, 0, 0.0); /* Black background with 0.0 opacity */
   color: #f1f1f1;
+}
+
+.year_event{
+  position: absolute;
+  font-size: 30px;
+  top: 1%;
+  left: 1%;
+  color: black;
 }
 
 .counter{
   position: absolute;
   font-size: 30px;
   top: 1%;
-  left: 85%;
-  background: rgb(0, 0, 0); /* Fallback color */
-  background: rgba(0, 0, 0, 0.0); /* Black background with 0.5 opacity */
-  color: #f1f1f1;
+  left: 95%;
+  color: black;
 }
 
 .center-fit {
