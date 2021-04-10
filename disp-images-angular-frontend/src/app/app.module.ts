@@ -6,13 +6,15 @@ import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
 import { PauseIndicatorComponent } from './pause-indicator/pause-indicator.component';
 import { CounterComponent } from './counter/counter.component';
+import { EventComponent } from './event/event.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     PauseIndicatorComponent,
-    CounterComponent
+    CounterComponent,
+    EventComponent
   ],
   imports: [
     BrowserModule,

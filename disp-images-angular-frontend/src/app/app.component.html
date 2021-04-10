@@ -1,5 +1,6 @@
 <div class="image-container">
   <app-counter class="counter" [count] = "image_count"></app-counter>
+  <app-event [year_event]= "year_event"></app-event>
   <app-pause-indicator class="pause" [hidden]="hide_pause_indicator()"></app-pause-indicator>
   <img class="center-fit" alt="loading" [src]="imgSrc" (click)="handleImageClickEvent($event)">
 </div>

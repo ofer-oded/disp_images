@@ -58,7 +58,7 @@ def get_next_image_name(request):
         return _return_response(request,dic)
 
 def _load_images() -> Generator[dict,None,None]:
-    dic = {"index":0,"image_name":""}
+    dic = {"index": 0,"image_name": "", "year":"2000", "event": "event"}
     i = -1
     media_folder_path = os.path.join(os.getcwd(), settings.MEDIA_ROOT)
     for f in glob.iglob(media_folder_path + '**/**', recursive=True):
@@ -66,12 +66,21 @@ def _load_images() -> Generator[dict,None,None]:
             i += 1
             dic["index"] = i
             dic["image_name"] = _extract_image_name_and_its_folder_name(f)
-            # os.chdir(current_folder)
+            year, event = _extract_year_event(f)
+            dic["year"] = year
+            dic["event"] = event
             yield dic
 
 def _extract_image_name_and_its_folder_name(full_image_name:str) -> str:
     path = Path(full_image_name)
     return os.path.join(path.parts[-2], path.parts[-1])
+
+def _extract_year_event(full_image_name:str) -> tuple:
+    path = Path(full_image_name)
+    parent_folder_name = path.parts[-2]
+    year = parent_folder_name.split("__")[0]
+    event = parent_folder_name.split("__")[1]
+    return year, event
 
 
 def _get_number_of_images() -> int:
@@ -84,7 +93,9 @@ def _get_number_of_images() -> int:
 
 def _fill_resonse(image_details:dict) -> dict:
     global __number_of_images
-    return {'image_name':image_details['image_name'],'image_index':image_details['index'],'total_number_of_images':__number_of_images}
+    return {'image_name': image_details['image_name'], 'image_index': image_details['index'],
+            'year': image_details['year'], 'event': image_details['event'],
+            'total_number_of_images': __number_of_images}
 
 
 def getImageURL(request):

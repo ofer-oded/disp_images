@@ -17,6 +17,7 @@ export class AppComponent {
   private image: HTMLImageElement = undefined;
   private pause: boolean = false;
   public image_count: string = "1/1";
+  public year_event: string = "";
 
   constructor(
     private getNextImageNameService: GetNextImageNameService,
@@ -62,6 +63,9 @@ export class AppComponent {
     imageObjectsFullURL$.subscribe((imageObjectsFullURL: ImageObject) => {
       this.imgSrc = imageObjectsFullURL.image_name;
       this.image_count = this.createImageCountString(imageObjectsFullURL.image_index,imageObjectsFullURL.total_number_of_images);
+      this.year_event = `${imageObjectsFullURL.year}__${imageObjectsFullURL.event}` 
+      console.log(imageObjectsFullURL.year);
+      console.log(imageObjectsFullURL.event);
     });
 
   }

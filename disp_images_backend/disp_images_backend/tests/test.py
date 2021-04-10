@@ -31,6 +31,7 @@ class TestCalls(TestCase):
         self.assertEqual(eval(response.content)['image_index'],0)
         self.assertEqual(eval(response.content)['total_number_of_images'],3)
         self.assertEqual(eval(response.content)['image_name'],'1999__eventB/20150904_050628 17.06.46.jpg')
+        self.assertEqual(eval(response.content)['year'],"1999")
 
 
         response = self.client.get('/disp_images/',{'command':'GET_NEXT_IMAGE_NAME'})
