@@ -6,11 +6,10 @@ class TestCalls(TestCase):
         self.assertEqual(response.content,b'hello')
 
     def test_get_image_name(self):
-        response = self.client.get('/disp_images/',{'command':'GET_NEXT_IMAGE_NAME'})
+        response = self.client.get('/disp_images/',{'command':'UNKOWN_COMMAND'})
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(eval(response.content)['image_index'],0)
-        self.assertEqual(eval(response.content)['total_number_of_images'],5)
-        self.assertEqual(eval(response.content)['image_name'],'1999__eventB/20150903_224212.jpg')
+        self.assertEqual(eval(response.content)['_image_index'],-1)
+        self.assertEqual(eval(response.content)['_total_number_of_images'],5)
 
         response = self.client.get('/disp_images/',{'command':'GET_NEXT_IMAGE_NAME'})
         self.assertEqual(response.status_code, 200)

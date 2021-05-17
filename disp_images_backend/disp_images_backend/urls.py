@@ -23,7 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('index/',views.index, name='index'),
     #path('<int:image_index>/disp_images/',views.getImageURL, name='grap-image-url'),
-    path('disp_images/',views.get_next_image_name, name='grap-image-url'),
+    path('disp_images/',views.get_image_details),
 #    path('download/<path:path>/',views.download)
 ]
 if settings.DEBUG:

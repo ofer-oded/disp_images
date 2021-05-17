@@ -2,15 +2,154 @@ import os
 import glob
 from pathlib import Path
 from django.shortcuts import render
-from typing import Generator
-from django.http import HttpResponse, JsonResponse, Http404
+from typing import Generator, List
+from django.http import HttpResponse, JsonResponse, HttpRequest,  Http404
 from django.conf import settings
+
+class ImageDetails():
+    """
+    contain context details about the image
+    """
+    def __init__(self, name:str, year:int, event: str ):
+        """
+        init
+        """
+        self._name = name
+        self._year = year
+        self._event = event
+
+    @property
+    def name(self) -> str:
+        return self._name
+
+    @property
+    def year (self) -> int:
+        return self._year
+
+    @property
+    def event(self) -> str:
+        return self._event
+
+class FetchImages():
+    def __init__(self):
+        """
+
+        """
+        # load all images
+        self._all_image_details = FetchImages._load_image_details()
+        self._current_image_index = 0
+
+    def reload_image_details(self):
+        self._all_image_details = FetchImages._load_image_details()
+
+    def get_next_image_details(self) -> ImageDetails:
+        """
+        retrieve the next image details from list
+        :return:
+        """
+        if len(self._all_image_details) == 0:
+            print("list of image details is empty")
+            return ImageDetails("",2000,"")
+        next_index = (self._current_image_index + 1) % len(self._all_image_details)
+        # update state
+        self._current_image_index = next_index
+        print(f"get image index: {self._current_image_index}")
+        return self._all_image_details[next_index]
+
+    def get_prev_image_details(self) -> ImageDetails:
+        """
+        retrieve the prev image details from list
+        :return:
+        """
+        if len(self._all_image_details) == 0:
+            print("list of image details is empty")
+            return ImageDetails("",2000,"")
+        # update state
+        prev_index = (self._current_image_index - 1) % len(self._all_image_details)
+        self._current_image_index = prev_index
+        print(f"get image index: {self._current_image_index}")
+        return self._all_image_details[prev_index]
+
+    def get_number_of_images(self) -> int:
+        print(f'number of image details read is: {len(self._all_image_details)}')
+        return len(self._all_image_details)
+
+    def get_current_image_index(self) ->int:
+        return self._current_image_index
+
+    @staticmethod
+    def _load_image_details() -> list:
+        """
+        load all images names contained at media folder into a dictionary
+         images should be at folders.
+         folder name foormat: year__eventName
+        :return:
+        """
+        lst_of_images_details = []
+        media_folder_path = os.path.join(os.getcwd(), settings.MEDIA_ROOT)
+        for f in glob.iglob(media_folder_path + '**/**', recursive=True):
+            if f.upper().endswith('.JPG'):
+                image_name = FetchImages._extract_image_name_and_its_folder_name(f)
+                year, event = FetchImages._extract_year_event(f)
+                image_details = ImageDetails(image_name, year, event)
+                lst_of_images_details.append(image_details)
+        return lst_of_images_details
+
+    @staticmethod
+    def _extract_image_name_and_its_folder_name(full_image_name:str) -> str:
+        path = Path(full_image_name)
+        return os.path.join(path.parts[-2], path.parts[-1])
+
+    @staticmethod
+    def _extract_year_event(full_image_name:str) -> tuple:
+        path = Path(full_image_name)
+        parent_folder_name = path.parts[-2]
+        year = parent_folder_name.split("__")[0]
+        event = parent_folder_name.split("__")[1]
+        return year, event
+
+
+class ResponseToFrontEnd():
+    """
+    this class contains all the fields contained i a response to the frontend
+    """
+
+    def __init__(self, image_index: int, image_url: str, image_year: int, image_event: str, total_number_of_images: int):
+        self._image_index = image_index
+        self._image_url = image_url
+        self._image_year = image_year
+        self._image_event = image_event
+        self._total_number_of_images = total_number_of_images
+
+    @property
+    def image_url(self):
+        return self._image_url
+
+    @property
+    def image_year(self):
+        return self._image_year
+
+    @property
+    def image_event(self):
+        return self._image_event
+
+    @property
+    def total_number_of_images(self):
+        return self._total_number_of_images
+
+
+class RequestCommands():
+    READ_IMAGE_DETAILS = "read_image_details"
+    GET_NEXT_IMAGE_DETAILS = "get_next_image_details"
+    GET_PREV_IMAGE_DETAILS = "get_prev_image_details"
+
 
 __list_images = []
 __current_image_index = -1
 __gen = None  # type: Generator
 __number_of_images = 0
-
+# this will load all image details at backend startup
+fetch_images = FetchImages()
 
 
 def index(request)-> HttpResponse:
@@ -30,6 +169,70 @@ def download(request,path):
 '''
 
 
+
+
+def get_image_details(request:HttpRequest)-> HttpResponse:
+    # return response which contains only number of images if not a GET request
+    if request.method != 'GET':
+        print("response to non GET request")
+        response = response_to_read_image_details_request(-1, fetch_images.get_number_of_images())
+        # return as json to frontend
+        return _return_response(response.__dict__)
+
+    command_from_frontend = request.GET['command']
+    if command_from_frontend == RequestCommands.READ_IMAGE_DETAILS:
+        print(f"request command: {command_from_frontend}")
+        # reload images details
+        fetch_images.reload_image_details()
+        # creates the response object
+        response = response_to_read_image_details_request(__current_image_index, fetch_images.get_number_of_images())
+        # return as json to frontend
+        return _return_response(response.__dict__)
+
+    if command_from_frontend == RequestCommands.GET_NEXT_IMAGE_DETAILS:
+        print(f"request command: {command_from_frontend}")
+        # get next image details
+        image_details = fetch_images.get_next_image_details()
+        # creates a response object
+        response = response_to_prev_or_next_commands(__current_image_index, image_details, fetch_images.get_number_of_images())
+        # return json to frontend
+        return _return_response(response.__dict__)
+
+    if command_from_frontend == RequestCommands.GET_PREV_IMAGE_DETAILS:
+        print(f"request command: {command_from_frontend}")
+        # get prev image details
+        image_details  = fetch_images.get_prev_image_details()
+        # creates a response object
+        response = response_to_prev_or_next_commands(__current_image_index, image_details, fetch_images.get_number_of_images())
+        # return json to frontend
+        return _return_response(response.__dict__)
+
+    print(f"unknown command: {command_from_frontend}")
+    # return response which contains only number of images
+    response = response_to_read_image_details_request(-1, fetch_images.get_number_of_images())
+    # return as json to frontend
+    return _return_response(response.__dict__)
+
+
+def response_to_read_image_details_request(image_index: int,total_number_of_images: int) -> ResponseToFrontEnd:
+    """
+    return ResponseToFrontEnd object for request command READ_IMAGE_DETAILS
+    :param total_number_of_images:
+    :return:
+    """
+    return ResponseToFrontEnd(image_index=image_index, image_url="", image_year=2000, image_event="",
+                              total_number_of_images=total_number_of_images)
+
+
+def response_to_prev_or_next_commands(image_index: int, image_details: ImageDetails,
+                                      total_number_of_images: int) -> ResponseToFrontEnd:
+    """
+    return ResponseToFrontEnd for a prev/next request commands GET_NEXT_IMAGE_DETAILS, GET_PREV_IMAGE_DETAILS
+    :param image_details:
+    :return:
+    """
+    return ResponseToFrontEnd(image_index=image_index, image_url=image_details.name, image_year=image_details.year,
+                              image_event=image_details.event, total_number_of_images=total_number_of_images)
 
 def get_next_image_name(request):
     dic = {'image_name': '', 'image_index': -1, 'total_number_of_images': 0}
@@ -70,17 +273,6 @@ def _load_images() -> Generator[dict,None,None]:
             dic["year"] = year
             dic["event"] = event
             yield dic
-
-def _extract_image_name_and_its_folder_name(full_image_name:str) -> str:
-    path = Path(full_image_name)
-    return os.path.join(path.parts[-2], path.parts[-1])
-
-def _extract_year_event(full_image_name:str) -> tuple:
-    path = Path(full_image_name)
-    parent_folder_name = path.parts[-2]
-    year = parent_folder_name.split("__")[0]
-    event = parent_folder_name.split("__")[1]
-    return year, event
 
 
 def _get_number_of_images() -> int:
@@ -163,16 +355,15 @@ def getImageURL(request):
     '''
 
 
-def _return_response(request, dic):
-    if request.method == 'GET':
-        return JsonResponse(dic)
-    return None
+def _return_response(dic: dict) -> JsonResponse:
+    # if request.method == 'GET':
+    return JsonResponse(dic)
+    # return None
 
 
 def _read_image_folder(image_index: int):
     if image_index == -1:
         __list_images = [f for f in os.listdir(settings.MEDIA_ROOT) if f.upper().endswith('.JPG')]
-
 
 def __read_images_folder() -> None:
     global __current_image_index
@@ -190,3 +381,8 @@ def __read_images_folder() -> None:
         __current_image_index = __current_image_index + 1
     else:
         __current_image_index = 0
+
+
+
+
+
