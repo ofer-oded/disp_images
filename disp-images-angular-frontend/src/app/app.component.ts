@@ -99,4 +99,8 @@ export class AppComponent {
   public hide_pause_indicator(): boolean {
     return !this.pause;
   }
+
+  public navigate(navigateCommand: string){
+    console.log(`got navigate command: ${navigateCommand}`)
+  }
 }

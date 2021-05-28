@@ -7,6 +7,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { PauseIndicatorComponent } from './pause-indicator/pause-indicator.component';
 import { CounterComponent } from './counter/counter.component';
 import { EventComponent } from './event/event.component';
+import { NavigatorComponent } from './navigator/navigator.component';
 
 
 @NgModule({
@@ -14,7 +15,8 @@ import { EventComponent } from './event/event.component';
     AppComponent,
     PauseIndicatorComponent,
     CounterComponent,
-    EventComponent
+    EventComponent,
+    NavigatorComponent
   ],
   imports: [
     BrowserModule,

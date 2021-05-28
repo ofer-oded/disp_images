@@ -3,4 +3,5 @@
   <app-event class="year_event" [year_event]= "year_event"></app-event>
   <app-pause-indicator class="pause" [hidden]="hide_pause_indicator()"></app-pause-indicator>
   <img class="center-fit" alt="loading" [src]="imgSrc" (click)="handleImageClickEvent($event)">
+  <app-navigator (navigationCommandCreated)="navigate($event)"></app-navigator>
 </div>
