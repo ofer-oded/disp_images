@@ -12,7 +12,7 @@ import { ImageObject } from '../../src/backend-interface';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  private backendURL: string = `http://${environment.baseUrl}:8000/disp_images/?command=GET_NEXT_IMAGE_NAME`;
+  private backendURL: string = `http://${environment.baseUrl}:8000/disp_images/?command=get_next_image_details`;
   private mediaURL: string = `http://${environment.baseUrl}:8000/media/`;
   private image: HTMLImageElement = undefined;
   private pause: boolean = false;
@@ -45,7 +45,7 @@ export class AppComponent {
 
     const imageObjectsFullURL$: Observable<ImageObject> = imgObjs$.pipe(
       map((imgObject: ImageObject) => {
-        imgObject.image_name = `${this.mediaURL}${imgObject.image_name}`;
+        imgObject.image_path = `${this.mediaURL}${imgObject.image_path}`;
         return imgObject;
       })
     );
@@ -54,16 +54,16 @@ export class AppComponent {
     // load URL: imageObjectsFullURL.image_name. using  concatMap so every load is done only after the previous finished
     imageObjectsFullURL$.pipe(
       concatMap((imageObjectsFullURL: ImageObject) =>
-        this.loadImageService.load(imageObjectsFullURL.image_name)
+        this.loadImageService.load(imageObjectsFullURL.image_path)
       )
     );
 
     // display the image
     // this.imgSrc is input binding to the html img tag
     imageObjectsFullURL$.subscribe((imageObjectsFullURL: ImageObject) => {
-      this.imgSrc = imageObjectsFullURL.image_name;
+      this.imgSrc = imageObjectsFullURL.image_path;
       this.image_count = this.createImageCountString(imageObjectsFullURL.image_index,imageObjectsFullURL.total_number_of_images);
-      this.year_event = `${imageObjectsFullURL.year} ${imageObjectsFullURL.event}` 
+      this.year_event = `${imageObjectsFullURL.image_year} ${imageObjectsFullURL.image_event}` 
     });
 
   }
