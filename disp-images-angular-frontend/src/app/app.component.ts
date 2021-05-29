@@ -102,5 +102,17 @@ export class AppComponent {
 
   public navigate(navigateCommand: string){
     console.log(`got navigate command: ${navigateCommand}`)
+    if(navigateCommand === "pause"){
+      this.pause = true;
+      return;
+    }
+
+    if(navigateCommand === "play"){
+      this.pause = false;
+      return;
+    }
+
+    console.log(`uknown command: ${navigateCommand}`);
+    
   }
 }
