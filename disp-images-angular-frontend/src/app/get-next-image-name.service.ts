@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { EMPTY, Observable } from 'rxjs';
+import { EMPTY } from 'rxjs';
 import {ImageObject} from '../../src/backend-interface'
 
 @Injectable({

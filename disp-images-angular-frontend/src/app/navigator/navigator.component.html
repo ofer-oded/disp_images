@@ -1,5 +1,5 @@
 <div>
-    <button [disabled]="disablePrevNextButtons" >prev</button>
+    <button [disabled]="disablePrevNextButtons" (click)="prevButtonPressed()" >prev</button>
     <button (click)="pauseButtonPressed()">{{pauseButtonCaption}}</button>
-    <button [disabled]="disablePrevNextButtons">next</button>
+    <button [disabled]="disablePrevNextButtons" (click)="nextButtonPressed()">next</button>
 </div>

@@ -35,7 +35,14 @@ constructor() {
       this.navigationCommandCreated.emit(this.playbackState);
       return;
     }  
+  }
 
+  prevButtonPressed(){
+    this.navigationCommandCreated.emit("prev");
+  }
+
+  nextButtonPressed(){
+    this.navigationCommandCreated.emit("next");
   }
 
 

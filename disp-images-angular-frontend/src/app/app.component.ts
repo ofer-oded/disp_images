@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, enableProdMode } from '@angular/core';
 import { interval, Observable } from 'rxjs';
 import { concatMap, map} from 'rxjs/operators';
 import { environment } from '../environments/environment';
 import { GetNextImageNameService } from './get-next-image-name.service';
 import { LoadImageService } from './load-image.service';
 import { ImageObject } from '../../src/backend-interface';
+import { HttpParams } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
@@ -12,6 +13,7 @@ import { ImageObject } from '../../src/backend-interface';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
+  private endPoint: string = `http://${environment.baseUrl}:8000/disp_images/`;
   private backendURL: string = `http://${environment.baseUrl}:8000/disp_images/?command=get_next_image_details`;
   private mediaURL: string = `http://${environment.baseUrl}:8000/media/`;
   private image: HTMLImageElement = undefined;
@@ -32,17 +34,22 @@ export class AppComponent {
   title = 'disp-images-angular-frontend';
   imgSrc: string;
   _doGet() {
+    let url: string = this.buildURL(this.endPoint,'next');
     const interval$ = interval(5000);
     const imgObjs$: Observable<ImageObject> = interval$.pipe(
       concatMap((_) =>
         this.getNextImageNameService.getNextImageName(
-          this.backendURL,
+          url,
           this.pause
         )
       )
     );
     // imgObjs: a stream of ImageObject's every interval
 
+    this.buildImageURLandDisplay(imgObjs$);
+  }
+
+  private buildImageURLandDisplay(imgObjs$: Observable<ImageObject>){
     const imageObjectsFullURL$: Observable<ImageObject> = imgObjs$.pipe(
       map((imgObject: ImageObject) => {
         imgObject.image_path = `${this.mediaURL}${imgObject.image_path}`;
@@ -112,7 +119,45 @@ export class AppComponent {
       return;
     }
 
-    console.log(`uknown command: ${navigateCommand}`);
+    if(navigateCommand === "prev"){
+      console.log("prev pressed");
+      let url:string = this.buildURL(this.endPoint,"prev");
+      this.getAndLoadImage(url);
+      return;
+      return;
+    }
+
+    if(navigateCommand === "next"){
+      console.log("next pressed");
+      let url:string = this.buildURL(this.endPoint,"next");
+      this.getAndLoadImage(url);
+      return;
+    }
+
+    console.log(`unknown command: ${navigateCommand}`);
     
   }
+
+  private getAndLoadImage(url:string){
+    const imgObjs$: Observable<ImageObject> = this.getNextImageNameService.getNextImageName(
+      url,
+      false
+    )
+    this.buildImageURLandDisplay(imgObjs$);
+  }
+
+  private buildURL(endPoint:String, param:string){
+    if(param === "next"){
+      let command = '?command=get_next_image_details';
+      let url = `${endPoint}${command}`;
+      return url;
+    }
+    if(param === 'prev'){
+      let command:string = '?command=get_prev_image_details';
+      let url = `${endPoint}${command}`;
+      return url;
+    }
+    console.log(`unsupported parameter: ${param}`)
+  }
+
 }
