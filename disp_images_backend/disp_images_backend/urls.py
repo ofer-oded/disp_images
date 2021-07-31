@@ -14,16 +14,18 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from . import views
 from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('index/',views.index, name='index'),
+    # ex: http://127.0.0.1:8000/
+    path('',views.index, name='index'),
+    path('view_photos/',   include('view_photos.urls'))
     #path('<int:image_index>/disp_images/',views.getImageURL, name='grap-image-url'),
-    path('disp_images/',views.get_image_details),
+    # path('disp_images/',views.get_image_details),
 #    path('download/<path:path>/',views.download)
 ]
 if settings.DEBUG:

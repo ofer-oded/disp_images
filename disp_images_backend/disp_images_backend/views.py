@@ -129,7 +129,7 @@ fetch_images = FetchImages()
 
 
 def index(request)-> HttpResponse:
-    return HttpResponse("hello")
+    return HttpResponse("disp_images_site")
 
 
 '''
