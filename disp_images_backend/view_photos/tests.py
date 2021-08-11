@@ -68,5 +68,5 @@ class TestCalls(TestCase):
         self.assertEqual(response.status_code, 200)
 
         response = self.client.get(end_point, {'command': 'RESTART'})
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 400)
         self.assertEqual(eval(response.content)['total_number_of_images'], 5)
