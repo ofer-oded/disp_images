@@ -13,8 +13,8 @@ import { HttpParams } from '@angular/common/http';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  private endPoint: string = `http://${environment.baseUrl}:8000/disp_images/`;
-  // private backendURL: string = `http://${environment.baseUrl}:8000/disp_images/?command=get_next_image_details`;
+  private endPoint: string = `http://${environment.baseUrl}:8000/view_photos/get_image_details/`;
+  // private backendURL: string = `http://${environment.baseUrl}:8000/view_photos/get_image_details/?command=get_next_image_details`;
   private mediaURL: string = `http://${environment.baseUrl}:8000/media/`;
   private image: HTMLImageElement = undefined;
   private pause: boolean = false;
