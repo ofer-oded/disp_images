@@ -39,11 +39,14 @@ DJANGO_APPS = [
     'django.contrib.staticfiles',
 ]
 
-LOCAL_APPS = ([]
+LOCAL_APPS = ([
+    'view_photos.apps.ViewPhotosConfig'
+]
 )
 
 THIRD_PARTY_APPS = ([
-    'corsheaders'
+    'corsheaders',
+    'rest_framework',
 ]
 )
 INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS + THIRD_PARTY_APPS

@@ -7,6 +7,7 @@ from pathlib import Path
 from django.core.handlers.wsgi import WSGIRequest
 from django.http import JsonResponse
 
+from .serializers import RequestFromFrontEndSerializer
 
 class ResponseToFrontEnd:
     """
@@ -139,7 +140,8 @@ def get_image_details(request: WSGIRequest) -> JsonResponse:
         # return as json to frontend
         return _return_response(response.__dict__)
 
-    command_from_frontend = request.GET['command']
+    serialzer = RequestFromFrontEndSerializer(request.GET)
+    command_from_frontend = serialzer.data['command']
     if command_from_frontend == RequestCommands.READ_IMAGE_DETAILS:
         print(f"request command: {command_from_frontend}")
         # reload images details

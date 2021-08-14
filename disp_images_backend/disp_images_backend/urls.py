@@ -24,9 +24,6 @@ urlpatterns = [
     # ex: http://127.0.0.1:8000/
     path('',views.index, name='index'),
     path('view_photos/',   include('view_photos.urls'))
-    #path('<int:image_index>/disp_images/',views.getImageURL, name='grap-image-url'),
-    # path('disp_images/',views.get_image_details),
-#    path('download/<path:path>/',views.download)
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,
