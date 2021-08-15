@@ -138,9 +138,11 @@ def get_image_details(request: WSGIRequest) -> JsonResponse:
     # return response which contains only number of images if not a GET request
     if request.method != 'GET':
         print("response to non GET request")
-        response = _response_to_read_image_details_request(-1, fetch_images.get_number_of_images())
-        # return as json to frontend
-        return _return_response(response.__dict__)
+        response_to_frontend = _response_to_read_image_details_request(-1, fetch_images.get_number_of_images())
+        # serialization will define which fields at response_to_frontend will be at the Json created
+        serialized: ResponseToFrontendSerializer = ResponseToFrontendSerializer(response_to_frontend)
+        # return response to frontend as json
+        return JsonResponse(serialized.data, status=200 )
 
     serialzer = RequestFromFrontEndSerializer(request.GET)
     command_from_frontend = serialzer.data['command']
@@ -149,38 +151,44 @@ def get_image_details(request: WSGIRequest) -> JsonResponse:
         # reload images details
         fetch_images.reload_image_details()
         # creates the response object
-        response = _response_to_read_image_details_request(FetchImages.current_image_index,
+        response_to_frontend: ResponseToFrontend = _response_to_read_image_details_request(FetchImages.current_image_index,
                                                            fetch_images.get_number_of_images())
-        # return as json to frontend
-        return _return_response(response.__dict__)
+        # serialization will define which fields at response_to_frontend will be at the Json created
+        serialized: ResponseToFrontendSerializer = ResponseToFrontendSerializer(response_to_frontend)
+        # return response to frontend as json
+        return JsonResponse(serialized.data, status=200 )
 
     if command_from_frontend == RequestCommands.GET_NEXT_IMAGE_DETAILS:
         print(f"request command: {command_from_frontend}")
         # get next image details
         image_details = fetch_images.get_next_image_details()
-        # creates a response object
+        # creates a response model object
         response_to_frontend: ResponseToFrontend = _response_to_prev_or_next_commands(FetchImages.current_image_index, image_details,
                                                       fetch_images.get_number_of_images())
+        # serialization will define which fields at response_to_frontend will be at the Json created
         serialized: ResponseToFrontendSerializer = ResponseToFrontendSerializer(response_to_frontend)
+        # return response to frontend as json
         return JsonResponse(serialized.data, status=200 )
-        # return json to frontend
-        # return _return_response(response.__dict__)
 
     if command_from_frontend == RequestCommands.GET_PREV_IMAGE_DETAILS:
         print(f"request command: {command_from_frontend}")
         # get prev image details
         image_details = fetch_images.get_prev_image_details()
         # creates a response object
-        response = _response_to_prev_or_next_commands(FetchImages.current_image_index, image_details,
+        response_to_frontend = _response_to_prev_or_next_commands(FetchImages.current_image_index, image_details,
                                                       fetch_images.get_number_of_images())
-        # return json to frontend
-        return _return_response(response.__dict__)
+        # serialization will define which fields at response_to_frontend will be at the Json created
+        serialized: ResponseToFrontendSerializer = ResponseToFrontendSerializer(response_to_frontend)
+        # return response to frontend as json
+        return JsonResponse(serialized.data, status=200 )
 
     print(f"unknown command: {command_from_frontend}")
     # return response which contains only number of images
-    response = _response_to_read_image_details_request(-1, fetch_images.get_number_of_images())
-    # return as json to frontend
-    return _return_response(response.__dict__, status_code=400)
+    response_to_frontend = _response_to_read_image_details_request(-1, fetch_images.get_number_of_images())
+    # serialization will define which fields at response_to_frontend will be at the Json created
+    serialized: ResponseToFrontendSerializer = ResponseToFrontendSerializer(response_to_frontend)
+    # return response to frontend as json
+    return JsonResponse(serialized.data, status=400)
 
 
 def _response_to_read_image_details_request(image_index: int, total_number_of_images: int) -> ResponseToFrontend:
@@ -193,10 +201,6 @@ def _response_to_read_image_details_request(image_index: int, total_number_of_im
                               total_number_of_images=total_number_of_images)
 
 
-def _return_response(dic: dict, status_code=200) -> JsonResponse:
-    res = JsonResponse(dic)
-    res.status_code = status_code
-    return res
 
 
 def _response_to_prev_or_next_commands(image_index: int, image_details: ImageDetails,
