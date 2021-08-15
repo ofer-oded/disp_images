@@ -19,6 +19,8 @@ class ResponseToFrontend(models.Model):
     image_path = models.CharField(max_length=100)
     image_year = models.IntegerField()
     image_event = models.CharField(max_length=100)
+    total_number_of_images = models.IntegerField()
+
 
     # managed = False will allow to use the model without a db
     class Meta:

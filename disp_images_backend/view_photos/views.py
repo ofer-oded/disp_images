@@ -6,21 +6,23 @@ from pathlib import Path
 
 from django.core.handlers.wsgi import WSGIRequest
 from django.http import JsonResponse
+from .models import ResponseToFrontend
 
 from .serializers import RequestFromFrontEndSerializer
+from .serializers import ResponseToFrontendSerializer
 
-class ResponseToFrontEnd:
-    """
-    this class contains all the fields contained i a response to the frontend
-    """
-
-    def __init__(self, image_index: int, image_path: str, image_year: int, image_event: str,
-                 total_number_of_images: int):
-        self.image_index = image_index
-        self.image_path = image_path
-        self.image_year = image_year
-        self.image_event = image_event
-        self.total_number_of_images = total_number_of_images
+# class ResponseToFrontEnd:
+#     """
+#     this class contains all the fields contained i a response to the frontend
+#     """
+#
+#     def __init__(self, image_index: int, image_path: str, image_year: int, image_event: str,
+#                  total_number_of_images: int):
+#         self.image_index = image_index
+#         self.image_path = image_path
+#         self.image_year = image_year
+#         self.image_event = image_event
+#         self.total_number_of_images = total_number_of_images
 
 
 class ImageDetails:
@@ -157,10 +159,12 @@ def get_image_details(request: WSGIRequest) -> JsonResponse:
         # get next image details
         image_details = fetch_images.get_next_image_details()
         # creates a response object
-        response = _response_to_prev_or_next_commands(FetchImages.current_image_index, image_details,
+        response_to_frontend: ResponseToFrontend = _response_to_prev_or_next_commands(FetchImages.current_image_index, image_details,
                                                       fetch_images.get_number_of_images())
+        serialized: ResponseToFrontendSerializer = ResponseToFrontendSerializer(response_to_frontend)
+        return JsonResponse(serialized.data, status=200 )
         # return json to frontend
-        return _return_response(response.__dict__)
+        # return _return_response(response.__dict__)
 
     if command_from_frontend == RequestCommands.GET_PREV_IMAGE_DETAILS:
         print(f"request command: {command_from_frontend}")
@@ -179,13 +183,13 @@ def get_image_details(request: WSGIRequest) -> JsonResponse:
     return _return_response(response.__dict__, status_code=400)
 
 
-def _response_to_read_image_details_request(image_index: int, total_number_of_images: int) -> ResponseToFrontEnd:
+def _response_to_read_image_details_request(image_index: int, total_number_of_images: int) -> ResponseToFrontend:
     """
     return ResponseToFrontEnd object for request command READ_IMAGE_DETAILS
     :param total_number_of_images:
     :return:
     """
-    return ResponseToFrontEnd(image_index=image_index, image_path="", image_year=2000, image_event="",
+    return ResponseToFrontend(image_index=image_index, image_path="", image_year=2000, image_event="",
                               total_number_of_images=total_number_of_images)
 
 
@@ -196,11 +200,11 @@ def _return_response(dic: dict, status_code=200) -> JsonResponse:
 
 
 def _response_to_prev_or_next_commands(image_index: int, image_details: ImageDetails,
-                                       total_number_of_images: int) -> ResponseToFrontEnd:
+                                       total_number_of_images: int) -> ResponseToFrontend:
     """
     return ResponseToFrontEnd for a prev/next request commands GET_NEXT_IMAGE_DETAILS, GET_PREV_IMAGE_DETAILS
     :param image_details:
     :return:
     """
-    return ResponseToFrontEnd(image_index=image_index, image_path=image_details.name, image_year=image_details.year,
+    return ResponseToFrontend(image_index=image_index, image_path=image_details.name, image_year=image_details.year,
                               image_event=image_details.event, total_number_of_images=total_number_of_images)

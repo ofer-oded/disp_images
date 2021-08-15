@@ -10,4 +10,4 @@ class RequestFromFrontEndSerializer(serializers.ModelSerializer):
 class ResponseToFrontendSerializer(serializers.ModelSerializer):
     class Meta:
         model = ResponseToFrontend
-        fields = ['image_index', 'image_path', 'image_year', 'image_event']
+        fields = ['image_index', 'image_path', 'image_year', 'image_event', 'total_number_of_images']
