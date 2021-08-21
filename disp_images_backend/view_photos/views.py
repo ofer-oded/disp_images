@@ -5,11 +5,14 @@ import glob
 from pathlib import Path
 
 from django.core.handlers.wsgi import WSGIRequest
-from django.http import JsonResponse
 from .models import ResponseToFrontend
 
 from .serializers import RequestFromFrontEndSerializer
 from .serializers import ResponseToFrontendSerializer
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+
 
 # class ResponseToFrontEnd:
 #     """
@@ -134,15 +137,16 @@ def index(request: WSGIRequest) -> HttpResponse:
     return HttpResponse("view_photos_app")
 
 
-def get_image_details(request: WSGIRequest) -> JsonResponse:
+@api_view(['GET'])
+def get_image_details(request: WSGIRequest) -> Response:
     # return response which contains only number of images if not a GET request
     if request.method != 'GET':
         print("response to non GET request")
-        response_to_frontend = _response_to_read_image_details_request(-1, fetch_images.get_number_of_images())
+        response_to_frontend : ResponseToFrontend = _response_to_read_image_details_request(-1, fetch_images.get_number_of_images())
         # serialization will define which fields at response_to_frontend will be at the Json created
         serialized: ResponseToFrontendSerializer = ResponseToFrontendSerializer(response_to_frontend)
         # return response to frontend as json
-        return JsonResponse(serialized.data, status=200 )
+        return Response(serialized.data, status=status.HTTP_200_OK)
 
     serialzer = RequestFromFrontEndSerializer(request.GET)
     command_from_frontend = serialzer.data['command']
@@ -156,7 +160,7 @@ def get_image_details(request: WSGIRequest) -> JsonResponse:
         # serialization will define which fields at response_to_frontend will be at the Json created
         serialized: ResponseToFrontendSerializer = ResponseToFrontendSerializer(response_to_frontend)
         # return response to frontend as json
-        return JsonResponse(serialized.data, status=200 )
+        return Response(serialized.data, status=status.HTTP_200_OK )
 
     if command_from_frontend == RequestCommands.GET_NEXT_IMAGE_DETAILS:
         print(f"request command: {command_from_frontend}")
@@ -168,7 +172,7 @@ def get_image_details(request: WSGIRequest) -> JsonResponse:
         # serialization will define which fields at response_to_frontend will be at the Json created
         serialized: ResponseToFrontendSerializer = ResponseToFrontendSerializer(response_to_frontend)
         # return response to frontend as json
-        return JsonResponse(serialized.data, status=200 )
+        return Response(serialized.data, status=status.HTTP_200_OK )
 
     if command_from_frontend == RequestCommands.GET_PREV_IMAGE_DETAILS:
         print(f"request command: {command_from_frontend}")
@@ -180,7 +184,7 @@ def get_image_details(request: WSGIRequest) -> JsonResponse:
         # serialization will define which fields at response_to_frontend will be at the Json created
         serialized: ResponseToFrontendSerializer = ResponseToFrontendSerializer(response_to_frontend)
         # return response to frontend as json
-        return JsonResponse(serialized.data, status=200 )
+        return Response(serialized.data, status=status.HTTP_200_OK)
 
     print(f"unknown command: {command_from_frontend}")
     # return response which contains only number of images
@@ -188,7 +192,7 @@ def get_image_details(request: WSGIRequest) -> JsonResponse:
     # serialization will define which fields at response_to_frontend will be at the Json created
     serialized: ResponseToFrontendSerializer = ResponseToFrontendSerializer(response_to_frontend)
     # return response to frontend as json
-    return JsonResponse(serialized.data, status=400)
+    return Response(serialized.data, status=status.HTTP_400_BAD_REQUEST)
 
 
 def _response_to_read_image_details_request(image_index: int, total_number_of_images: int) -> ResponseToFrontend:
