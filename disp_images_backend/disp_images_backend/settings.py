@@ -14,7 +14,7 @@ import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
@@ -66,8 +66,14 @@ ROOT_URLCONF = 'disp_images_backend.urls'
 
 TEMPLATES = [
     {
+        # BACKEND': path to a template engine class implementing Django’s template backend API - this is the default
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        # DIRS defines a list of directories where the engine should look for template source files, in search order.
+        # in this case it search for Templates dir under the project dir
+        'DIRS': [os.path.join(PROJECT_ROOT, 'templates')],
+        # APP_DIRS tells whether the engine should look for templates inside installed applications.\
+        # Each backend defines a conventional name for the subdirectory inside applications\
+        # where its templates should be stored.
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -130,6 +136,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
+STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
 STATIC_URL = '/static/'
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = '/media/'
+
+# Extra places for collectstatic to find static files.
+STATICFILES_DIRS = [
+    os.path.join(PROJECT_ROOT, 'static'),
+]

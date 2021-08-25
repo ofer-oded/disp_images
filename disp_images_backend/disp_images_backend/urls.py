@@ -18,12 +18,15 @@ from django.urls import path, include
 from . import views
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.generic.base import TemplateView
+from django.conf.urls import url
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     # ex: http://127.0.0.1:8000/
     path('',views.index, name='index'),
-    path('view_photos/',   include('view_photos.urls'))
+    path('view_photos/',   include('view_photos.urls')),
+    url(r'^.*', TemplateView.as_view(template_name="home.html"), name="home")
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,
