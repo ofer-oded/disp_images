@@ -15,7 +15,6 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from . import views
 from django.conf import settings
 from django.conf.urls.static import static
 from django.views.generic.base import TemplateView
@@ -24,9 +23,13 @@ from django.conf.urls import url
 urlpatterns = [
     path('admin/', admin.site.urls),
     # ex: http://127.0.0.1:8000/
-    path('',views.index, name='index'),
+    # this should include the app url which contain routes to the api calls
+    # ex: http://localhost:8000/view_photos/ will call view_photos.vie.index
     path('view_photos/',   include('view_photos.urls')),
-    url(r'^.*', TemplateView.as_view(template_name="home.html"), name="home")
+    # url(r'^.*', TemplateView.as_view(template_name="home.html"), name="home")
+    # this should serve the frontend and read the html from the project static folder
+    # ex: http:/localhost:8000/
+    url('', TemplateView.as_view(template_name="home.html"), name="home")
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL,

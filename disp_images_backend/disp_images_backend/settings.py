@@ -25,6 +25,8 @@ SECRET_KEY = '%(#mablt-d6ndvzl(-i#)&zl774k7_t%r_k-!$n!4le*kc#2(i'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+# A list of strings representing the host/domain names that this Django site can serve.\
+# This is a security measure to prevent HTTP Host header attacks
 ALLOWED_HOSTS = ['localhost','192.168.1.110','127.0.0.1']
 
 
@@ -36,7 +38,7 @@ DJANGO_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
+    'django.contrib.staticfiles'
 ]
 
 LOCAL_APPS = ([
@@ -61,7 +63,13 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-CORS_ORIGIN_ALLOW_ALL = True
+# CORS_ALLOWED_ORIGINS is the list of origins authorized to make requests
+# The only allowed are Angular frontend debug server
+# at the browser network console we should see at response header: 'AccessControl-Allow-Origin: http://localhost:4200
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:4200",
+    "http://127.0.0.1:4200"
+]
 ROOT_URLCONF = 'disp_images_backend.urls'
 
 TEMPLATES = [
@@ -136,7 +144,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
-STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
+# STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
 STATIC_URL = '/static/'
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = '/media/'
