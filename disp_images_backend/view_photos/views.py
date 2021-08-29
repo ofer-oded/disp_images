@@ -132,9 +132,9 @@ class RequestCommands:
 
 fetch_images = FetchImages()
 
-
+@api_view(['GET'])
 def index(request: WSGIRequest) -> HttpResponse:
-    return HttpResponse("view_photos_app")
+    return Response("view_photos_app")
 
 
 @api_view(['GET'])

@@ -27,6 +27,7 @@ DEBUG = True
 
 # A list of strings representing the host/domain names that this Django site can serve.\
 # This is a security measure to prevent HTTP Host header attacks
+# 192.168.1.110 should be the server ip
 ALLOWED_HOSTS = ['localhost','192.168.1.110','127.0.0.1']
 
 
