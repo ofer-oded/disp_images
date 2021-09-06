@@ -5,7 +5,6 @@ import glob
 from pathlib import Path
 
 from django.core.handlers.wsgi import WSGIRequest
-from .models import ResponseToFrontend
 
 from .serializers import RequestFromFrontEndSerializer
 from .serializers import ResponseToFrontendSerializer
@@ -141,78 +140,69 @@ def index(request: WSGIRequest) -> HttpResponse:
 def get_image_details(request: WSGIRequest) -> Response:
     # return response which contains only number of images if not a GET request
     if request.method != 'GET':
-        print("response to non GET request")
-        response_to_frontend : ResponseToFrontend = _response_to_read_image_details_request(-1, fetch_images.get_number_of_images())
-        # serialization will define which fields at response_to_frontend will be at the Json created
-        serialized: ResponseToFrontendSerializer = ResponseToFrontendSerializer(response_to_frontend)
-        # return response to frontend as json
-        return Response(serialized.data, status=status.HTTP_200_OK)
+        image_details = ImageDetails("", -1, "")
+        return _response_to_prev_or_next_commands(FetchImages.current_image_index, image_details,
+                                                  fetch_images.get_number_of_images(), status.HTTP_400_BAD_REQUEST)
 
-    serialzer = RequestFromFrontEndSerializer(request.GET)
-    command_from_frontend = serialzer.data['command']
+    request_parameters = request.GET
+    serializer: RequestFromFrontEndSerializer = RequestFromFrontEndSerializer(data=request_parameters)
+    if not serializer.is_valid():
+        image_details = ImageDetails("", -1, "")
+        return _response_to_prev_or_next_commands(FetchImages.current_image_index, image_details,
+                                                  fetch_images.get_number_of_images(), status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    command_from_frontend = serializer.data['command']
     if command_from_frontend == RequestCommands.READ_IMAGE_DETAILS:
         print(f"request command: {command_from_frontend}")
         # reload images details
         fetch_images.reload_image_details()
-        # creates the response object
-        response_to_frontend: ResponseToFrontend = _response_to_read_image_details_request(FetchImages.current_image_index,
-                                                           fetch_images.get_number_of_images())
-        # serialization will define which fields at response_to_frontend will be at the Json created
-        serialized: ResponseToFrontendSerializer = ResponseToFrontendSerializer(response_to_frontend)
-        # return response to frontend as json
-        return Response(serialized.data, status=status.HTTP_200_OK )
+        image_details = fetch_images.get_prev_image_details()
+        return _response_to_prev_or_next_commands(FetchImages.current_image_index, image_details,
+                                                  fetch_images.get_number_of_images(),status.HTTP_200_OK)
 
     if command_from_frontend == RequestCommands.GET_NEXT_IMAGE_DETAILS:
         print(f"request command: {command_from_frontend}")
         # get next image details
         image_details = fetch_images.get_next_image_details()
-        # creates a response model object
-        response_to_frontend: ResponseToFrontend = _response_to_prev_or_next_commands(FetchImages.current_image_index, image_details,
-                                                      fetch_images.get_number_of_images())
-        # serialization will define which fields at response_to_frontend will be at the Json created
-        serialized: ResponseToFrontendSerializer = ResponseToFrontendSerializer(response_to_frontend)
-        # return response to frontend as json
-        return Response(serialized.data, status=status.HTTP_200_OK )
+        return _response_to_prev_or_next_commands(FetchImages.current_image_index, image_details,
+                                                      fetch_images.get_number_of_images(),status.HTTP_200_OK)
 
     if command_from_frontend == RequestCommands.GET_PREV_IMAGE_DETAILS:
         print(f"request command: {command_from_frontend}")
         # get prev image details
         image_details = fetch_images.get_prev_image_details()
-        # creates a response object
-        response_to_frontend = _response_to_prev_or_next_commands(FetchImages.current_image_index, image_details,
-                                                      fetch_images.get_number_of_images())
-        # serialization will define which fields at response_to_frontend will be at the Json created
-        serialized: ResponseToFrontendSerializer = ResponseToFrontendSerializer(response_to_frontend)
-        # return response to frontend as json
-        return Response(serialized.data, status=status.HTTP_200_OK)
+        return _response_to_prev_or_next_commands(FetchImages.current_image_index, image_details,
+                                                      fetch_images.get_number_of_images(),status.HTTP_200_OK)
 
     print(f"unknown command: {command_from_frontend}")
     # return response which contains only number of images
-    response_to_frontend = _response_to_read_image_details_request(-1, fetch_images.get_number_of_images())
-    # serialization will define which fields at response_to_frontend will be at the Json created
-    serialized: ResponseToFrontendSerializer = ResponseToFrontendSerializer(response_to_frontend)
-    # return response to frontend as json
-    return Response(serialized.data, status=status.HTTP_400_BAD_REQUEST)
+    image_details = ImageDetails("",-1,"")
+    return _response_to_prev_or_next_commands(FetchImages.current_image_index, image_details,
+                                              fetch_images.get_number_of_images(), status.HTTP_400_BAD_REQUEST)
 
 
-def _response_to_read_image_details_request(image_index: int, total_number_of_images: int) -> ResponseToFrontend:
+# def _response_to_read_image_details_request(image_index: int, total_number_of_images: int) -> ResponseToFrontend:
+#     """
+#     return ResponseToFrontEnd object for request command READ_IMAGE_DETAILS
+#     :param total_number_of_images:
+#     :return:
+#     """
+#     return ResponseToFrontend(image_index=image_index, image_path="", image_year=2000, image_event="",
+#                               total_number_of_images=total_number_of_images)
+
+
+def _response_to_prev_or_next_commands(image_index: int, image_details: ImageDetails, total_number_of_images: int,
+                                       http_status: int) -> Response:
     """
-    return ResponseToFrontEnd object for request command READ_IMAGE_DETAILS
-    :param total_number_of_images:
-    :return:
+    return Response for a prev/next request commands GET_NEXT_IMAGE_DETAILS, GET_PREV_IMAGE_DETAILS
     """
-    return ResponseToFrontend(image_index=image_index, image_path="", image_year=2000, image_event="",
-                              total_number_of_images=total_number_of_images)
+    # serialize a response according to model ResponseToFrontend
+    serializer: ResponseToFrontendSerializer = ResponseToFrontendSerializer(
+        data={"image_index": image_index, "image_path": image_details.name, "image_year": image_details.year,
+              "image_event": image_details.event, "total_number_of_images": total_number_of_images})
 
-
-
-
-def _response_to_prev_or_next_commands(image_index: int, image_details: ImageDetails,
-                                       total_number_of_images: int) -> ResponseToFrontend:
-    """
-    return ResponseToFrontEnd for a prev/next request commands GET_NEXT_IMAGE_DETAILS, GET_PREV_IMAGE_DETAILS
-    :param image_details:
-    :return:
-    """
-    return ResponseToFrontend(image_index=image_index, image_path=image_details.name, image_year=image_details.year,
-                              image_event=image_details.event, total_number_of_images=total_number_of_images)
+    # validate
+    if serializer.is_valid():
+        return Response(serializer.data, status= http_status)
+    else:
+        return Response(data=serializer.data, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

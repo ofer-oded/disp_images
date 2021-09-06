@@ -9,9 +9,10 @@ class RequestGotFromFrontEnd(models.Model):
 
 class ResponseToFrontend(models.Model):
     image_index = models.IntegerField()
-    image_path = models.CharField(max_length=100)
+    models.CharField()
+    image_path = models.CharField(max_length=100, blank=True )
     image_year = models.IntegerField()
-    image_event = models.CharField(max_length=100)
+    image_event = models.CharField(max_length=100, blank=True)
     total_number_of_images = models.IntegerField()
 
 
