@@ -67,7 +67,8 @@ CORS_ORIGIN_ALLOW_ALL = False
 # Access-Control-Allow-Origin http://localhost:4200
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:4200",
-    "http://127.0.0.1:4200"
+    "http://127.0.0.1:4200",
+    "http://192.168.1.110:80"
 ]
 ROOT_URLCONF = 'disp_images_backend.urls'
 
