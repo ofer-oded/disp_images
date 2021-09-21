@@ -1,6 +1,6 @@
 ### STAGE 1: Build ###
 # base image
-FROM node:12.12.0 as build
+FROM node:16.13.2 as build
 
 # set working directory
 WORKDIR /usr/apps
@@ -15,5 +15,5 @@ RUN npm run prod
 ### STAGE 2: Run ###
 # production environment
 FROM nginx:1.17.1-alpine
-COPY --from=build /usr/apps/dist/disp-images-angular-frontend /usr/share/nginx/html
+COPY --from=build /usr/apps/dist/apps/disp-images-angular-frontend /usr/share/nginx/html
 

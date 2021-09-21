@@ -1,0 +1,16 @@
+<div class="image-container">
+ <div *ngIf="image_count$ | async as image_count">
+  <app-counter class="counter"  [count]="image_count"></app-counter>
+</div>
+<div *ngIf="year_event$ | async as year_event">
+  <app-event class="year_event" [year_event]="year_event"></app-event>
+</div>
+  <app-pause-indicator
+    class="pause"
+    [hidden]="hide_pause_indicator()"
+  ></app-pause-indicator>
+  <!-- <img class="center-fit" alt="loading" [src]="imgSrc" (click)="handleImageClickEvent($event)"> -->
+  <app-photo class="center-fit" [imagesFullUrl$]="imageUrls$"></app-photo>
+  <!-- <img class="center-fit" alt="loading" [src]="imagesFullUrl$ | async" > -->
+  <app-navigator (navigationCommandCreated)="navigate($event)"></app-navigator>
+</div>
