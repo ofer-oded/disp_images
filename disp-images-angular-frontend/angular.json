@@ -10,40 +10,42 @@
           "style": "scss"
         }
       },
-      "root": "",
-      "sourceRoot": "src",
+      "root": "apps/disp-images-angular-frontend",
+      "sourceRoot": "apps/disp-images-angular-frontend/src",
       "prefix": "app",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/disp-images-angular-frontend",
-            "index": "src/index.html",
-            "main": "src/main.ts",
-            "polyfills": "src/polyfills.ts",
-            "tsConfig": "tsconfig.app.json",
-            "aot": true,
+            "outputPath": "dist/apps/disp-images-angular-frontend",
+            "index": "apps/disp-images-angular-frontend/src/index.html",
+            "main": "apps/disp-images-angular-frontend/src/main.ts",
+            "polyfills": "apps/disp-images-angular-frontend/src/polyfills.ts",
+            "tsConfig": "apps/disp-images-angular-frontend/tsconfig.app.json",
             "assets": [
-              "src/favicon.ico",
-              "src/assets"
+              "apps/disp-images-angular-frontend/src/favicon.ico",
+              "apps/disp-images-angular-frontend/src/assets"
             ],
-            "styles": [
-              "src/styles.scss"
-            ],
-            "scripts": []
+            "styles": ["apps/disp-images-angular-frontend/src/styles.scss"],
+            "scripts": [],
+            "vendorChunk": true,
+            "extractLicenses": false,
+            "buildOptimizer": false,
+            "sourceMap": true,
+            "optimization": false,
+            "namedChunks": true
           },
           "configurations": {
             "production": {
               "fileReplacements": [
                 {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
+                  "replace": "apps/disp-images-angular-frontend/src/environments/environment.ts",
+                  "with": "apps/disp-images-angular-frontend/src/environments/environment.prod.ts"
                 }
               ],
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
               "extractLicenses": true,
               "vendorChunk": false,
@@ -60,8 +62,17 @@
                   "maximumError": "10kb"
                 }
               ]
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
             }
-          }
+          },
+          "defaultConfiguration": ""
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
@@ -71,8 +82,12 @@
           "configurations": {
             "production": {
               "browserTarget": "disp-images-angular-frontend:build:production"
+            },
+            "development": {
+              "browserTarget": "disp-images-angular-frontend:build:development"
             }
-          }
+          },
+          "defaultConfiguration": "development"
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
@@ -83,46 +98,51 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "src/test.ts",
-            "polyfills": "src/polyfills.ts",
-            "tsConfig": "tsconfig.spec.json",
-            "karmaConfig": "karma.conf.js",
+            "main": "apps/disp-images-angular-frontend/src/test.ts",
+            "polyfills": "apps/disp-images-angular-frontend/src/polyfills.ts",
+            "tsConfig": "apps/disp-images-angular-frontend/tsconfig.spec.json",
+            "karmaConfig": "apps/disp-images-angular-frontend/karma.conf.js",
             "assets": [
-              "src/favicon.ico",
-              "src/assets"
+              "apps/disp-images-angular-frontend/src/favicon.ico",
+              "apps/disp-images-angular-frontend/src/assets"
             ],
-            "styles": [
-              "src/styles.scss"
-            ],
+            "styles": ["apps/disp-images-angular-frontend/src/styles.scss"],
             "scripts": []
           }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "tsconfig.app.json",
-              "tsconfig.spec.json",
-              "e2e/tsconfig.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
-          }
-        },
+        }
+      },
+      "tags": []
+    },
+    "disp-images-angular-frontend-e2e": {
+      "root": "apps/disp-images-angular-frontend-e2e",
+      "sourceRoot": "apps/disp-images-angular-frontend-e2e/src",
+      "projectType": "application",
+      "architect": {
         "e2e": {
-          "builder": "@angular-devkit/build-angular:protractor",
+          "builder": "@nrwl/cypress:cypress",
           "options": {
-            "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "disp-images-angular-frontend:serve"
+            "cypressConfig": "apps/disp-images-angular-frontend-e2e/cypress.json",
+            "devServerTarget": "disp-images-angular-frontend:serve:development",
+            "tsConfig": "apps/disp-images-angular-frontend-e2e/tsconfig.json"
           },
           "configurations": {
             "production": {
               "devServerTarget": "disp-images-angular-frontend:serve:production"
             }
           }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "outputs": ["{options.outputFile}"],
+          "options": {
+            "lintFilePatterns": [
+              "apps/disp-images-angular-frontend-e2e/**/*.{js,ts}"
+            ]
+          }
         }
-      }
-    }},
-  "defaultProject": "disp-images-angular-frontend"
+      },
+      "tags": [],
+      "implicitDependencies": ["disp-images-angular-frontend"]
+    }
+  }
 }

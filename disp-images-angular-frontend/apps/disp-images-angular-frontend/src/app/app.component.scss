@@ -1,0 +1,43 @@
+/* img {
+  width:100%;
+  height:auto;
+} */
+
+.pause {
+  position: absolute;
+  font-size: 30px;
+  top: 1%;
+  left: 50%;
+  background: rgb(0, 0, 0); /* Fallback color */
+  background: rgba(0, 0, 0, 0); /* Black background with 0.0 opacity */
+  color: #f1f1f1;
+}
+
+.year_event {
+  position: absolute;
+  font-size: 30px;
+  top: 1%;
+  left: 1%;
+  color: black;
+}
+
+.counter {
+  position: absolute;
+  font-size: 30px;
+  top: 1%;
+  left: 85%;
+  color: black;
+}
+
+.center-fit {
+  max-width: 100%;
+  max-height: 85vh;
+  margin: auto;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.image-container {
+  display: grid;
+  height: 100%;
+}

@@ -1,14 +1,19 @@
 version: '3.7'
 services:
-    disp_images_backend:
+    disp-images-backend:
         image:  "oferoded/disp_images_backend:${TAG}"
+        # will use hostname in order to send http request from frontend container to backend container (using nginx proxy)
+        # hostname should be a valid domain name.
+        # alphabetical characters (A-Z), numeric characters (0-9), the minus sign (-), and the period . Period characters are allowed only
+        # means that if you are inside the frontend container than ping disp-images-backend will work
+        # hostname: disp-images-backend
         build: 
             context: ../disp_images_backend/
         ports:
             - 8000:8000
         volumes:
             - media:/usr/apps/media
-    disp_images_frontend:
+    disp-images-frontend:
         image:  "oferoded/disp_images_frontend:${TAG}"
         build:
             context: ../disp-images-angular-frontend/

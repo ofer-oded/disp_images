@@ -1,0 +1,13 @@
+<div>
+  <button [disabled]="disablePrevNextButtons" (click)="prevButtonPressed()">
+    prev
+  </button>
+  <button (click)="pauseButtonPressed()">{{ pauseButtonCaption }}</button>
+  <button
+    data-testid="next"
+    [disabled]="disablePrevNextButtons"
+    (click)="nextButtonPressed()"
+  >
+    next
+  </button>
+</div>
